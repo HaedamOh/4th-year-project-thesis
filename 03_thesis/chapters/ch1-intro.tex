@@ -1,82 +1,85 @@
 \chapter{Introduction}
 \label{chap:intro}
 
+\begin{figure}
+    \includegraphics[width=\linewidth]{pics/header.png}
+    \captionof{figure}{Place recognition in dense forest environments using a backpack-mounted LiDAR and legged robot equipped with LiDAR. Right: Illustration of loop closure detection within a deeply forested area, with offset distance of 9.2 meters and orientation of 56 degrees between the matched scans. White lines indicate some corresponding locations in the two point clouds (but no actual corresponces are used).
+    }
+    \label{fig:motivation}
+\end{figure}
 
 \section{Motivation}
-
-% Introduction, Objective
-%  Why is it important, 
-% what is the problem, 
-This report presents a comprehensive exploration of various LiDAR-based place recognition algorithms focusing on their application in long-term navigation across unstructured natural environments. 
-Place recognition is the capability to identify specific revisited locations and correctly determining robot's pose by comparing the current observation with previously visited places. 
-
-The primary goal is to design and integrate a LiDAR place recognition system within a Simultaneous Localization and Mapping (SLAM) framework. 
-This integration is key for achieving robust loop closure detection, precise pose optimization, and the creation of accurate 3D maps, which are essential for long-term navigation and mapping systems.
-
-% What is place recognition
-% Motivation 
-% Why LiDAR 
-In context of long-term navigation, LiDAR proves to be more robust than RGB cameras, capable of capturing much longer-range 3D scene data,  less susceptible to estricted viewpoints and visual change due to lighting conditions.
-Therefore, LiDAR is used as a main sensor to obtain 3D pointclouds of the environment, then processing 3D pointclouds to extract meaningful features to check previously visited places.
-
-% LiDAR place recognition methods
-% 1. Handcrafted features
-% 2. Learning-based features
-Descritors are used to represent the environment and compare with each other to determine whether the current observation is a revisited place.
-There are two main approaches: handcrafted features and learning-based features.
-Handcrafted features are manually designed to capture the geometric characteristics of the environment.
-This approach is more generalizable and robust to changes in the environment, but it is difficult to design features that are both discriminative and invariant to environmental changes.
-Recently, learning-based features using recent deep-learning became popular in place recognition.
+Place recognition is an essential capability used to minimize the drift in the pose estimate produce by a Simultaneous Localization and Mapping (SLAM), as well as to re-localize in previously mapped areas. 
+LiDAR-based place recognition systems have demonstrated robustness by effectively capturing scene structure while showing low susceptibility to visual changes, making them suitable for long-term navigation. 
+Previous methods have primarily focused on the problem of autonomous driving in urban environments (characterised by long linear sequences), with their efficacy in natural settings much less tested.
+%\mfallon{Wildplaces dataset is a counter example of this.} 
+Recent ongoing applications in natural environments, including agriculture, environmental monitoring, conservation, and search and rescue, highlight the significance of extending research efforts beyond urban landscapes.
 
 \section{Challenges in natural environments}
 % Why natural environment 
-Despite the advantages of LiDAR in place recognition, its application in unstructured natural environments like forests presents several notable challenges.
-Firstly, the task of extracting meaningful features from 3D point clouds in these settings is complex. 
-Natural environments are irregular structures like trees, which not only lack fine structure but also undergo seasonal changes, affecting their shape and density over time. 
-This complicates the creation of consistent geometric representations crucial for accurate place recognition.
-Secondly, the limitation in the LiDAR's field of view poses a significant challenge. In large-scale natural environment, LiDAR sensors often struggle to capture the complete vertical extent of the environment. 
-This issue is particularly pronounced in areas with tall trees or undulating terrain, where the full scope of the environment is crucial for comprehensive mapping and navigation.
-Thirdly, processing the voluminous 3D data typical of LiDAR systems, such as point clouds, demands substantial computational resources in terms of memory and processing time. 
-This requirement poses a considerable challenge for robotic applications, where often limited computational resources are available, and real-time performance is essential.
-Lastly, the dynamic nature of unstructured terrains contrasts sharply with the more predictable environments of urban or structured settings, like roads used in autonomous driving. 
-In natural landscapes, the paths and terrains are subject to continual change. 
-The extreme orientation and movement often encountered in unstructured environments can lead to sparse and unreliable sensor data, exacerbating the issue of frequent odometry drift.
+Despite the advancements of LiDAR-based place recognition in urban areas, its application in unstructured natural environments like forests presents several notable challenges. 
+Firstly, natural environments are irregular structures like trees, which not only lack fine structure but also undergo seasonal changes, affecting their shape and density over time. This complicates the creation of consistent geometric representations crucial for accurate place recognition.
+Secondly, a limited field of view and occlusions of a LiDAR sensor pose a loss of information. In large-scale natural environment, LiDAR sensors often struggle to capture the complete vertical extent of the environment. 
+This issue is particularly common in areas with tall, cluttered trees.  Undulating terrains and dense trees cause occlusions resulting in incomplete scans of a LiDAR sensor. 
+Lastly, unique, undefined trajectories or paths when exploring dense forests pose another challenge: a place recognition capability of identifying its location not exctly at the same visited place but 'near by' location. 
 
-\begin{figure}[h]
-\centering  
-\includegraphics[width=0.99\textwidth]{pics/intro_motivation_fig_189_100}    
-\caption{Place recognition in dense forest environments using a backpack-mounted LiDAR and legged robot equipped with LiDAR.
-Right: Illustration of loop closure detection within a deeply forested area, with a baseline distance of xx meters and an orientation offset of yy degrees. Dotted red lines highlight corresponding locations from the two point clouds.}
-\label{fig:intro_motivation}
-\end{figure}
 
-% Contribution 
-\section{Contribution}
-Overall, there is a compelling need for LiDAR place recognition in natural environments. 
-In this report, I showed
+%%%%%%%%%%%%%%%%%%%
+%% WHICH PROBLEM
+% Second, explain WHICH problem you are solving/address to solve: Compare WildPlace  
+\section{Objectives}
+Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by hand-held spinning LiDAR, capturing seasonal changes within the forest. The dataset was used to evaluate different stete-of-the-art place recognition models in forest environments focusing on localization tasks along the access roads of a national park. The main outcome of their work was that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, without the strong structural cues that access roads provide roads. Additionally we are also interested in testing the accuracy of precise 6DoF pose estimation for forestry or biodiversity monitoring applications.
+
+
+%%%%%%%%%%%%%%%%%%%
+%% HOW & WHAT
+% Third, explain briefly how one can address the problem in general and mention 
+% briefly what others/we before have done. Prepare the reader for your contribution that comes in the next section (and not here!).
+%\mfallon{this paragraph should be a little literature review - NOT about what we did}
+%\haedam{I changed the paragraph to be more about WildPlace}
+
+% In this paper, we extend the evaluation of place recognition models to dense forest environments, employing various setups of LiDAR sensors. For instance, we consider scenarios involving legged robots or backpack-mounted LiDAR devices, which explore the forest in a more unstructured manner, without relying on defined access roads for detecting loop-closures.
+% This extension enables for efficient forest mapping and surveying applications in scenarios including single-session and multi-session SLAM, as well as relocalization within a pre-existing map.
+
+%%%%%%%%%%%%%%%%%%%
+%% MAIN CONTRIBUTION & WHAT FOLLOWS FROM THAT
+% Explain your contribution in one paragraph. This is a very important paragraph. 
+% Always start that paragraph with: ``The main contribution of this paper is''
+\section{Contributions}
+
+In this work, we present an evaluation of place recognition models to dense forest environments. We employ different LiDAR sensors with sequences recorded with backpack-mounted devices or mobile robots, such as legged platforms, to perform a rigorous analysis of existing learning-based and handcrafted LiDAR place recognition systems. Further, we present a LiDAR-based SLAM system to assess the proposed loop-closure pairs and subsequently validate them through fine-registration in both online and offline modes. Finally, we demonstrate the approach being use for a purely relocalization task, wherein the system continuously localizes its position within a prior point cloud map made up of individual LiDAR scans.
+
+% \mfallon{Note: alternatively you could simply localise in a single giant point cloud of the forest - if you knew the starting point - but that would not scale well. But it would work!}
+
+%%%%%%%%%%%%%%%%%%%
+%% OUR KEY CLAIMS (can be merged with the main contribution above if desired)
+% Explicitly(!) state your claims in one (short) paragraph and make
+% sure you pick them up again in the experiments and support every claim.
+
+In summary, the contributions of this paper are:
 \begin{itemize}
-\item 1. Evaluation of both handcrafted and learning-based LiDAR place recognition models' descriptors in dense forest environments.
 
-\item 2. Complete pipeline integrating loop closures into a SLAM system.
+\item Evaluation of the performance of four LiDAR place recognition models, both handcrafted and learning-based, in dense forest environments.
 
-\item 3. Analysis of loop-closure pairs based on distances and viewpoints differences.
+\item Analyzis of loop-closure performance as a function of the relative distance and orientation between candidate loop pairs.
 
-\item 4. Demonstration of our system for online and offline SLAM modes, as well as relocalization in previously mapped mapped environments. 
+\item Demonstration of the best performing method in online/single-session and offline/multi-session SLAM modes, as well as in relocalization tasks for forest inspection in a prior environment map. 
+% \mfallon{what about `Demonstration of the best performing method...' in these tasks}
 
 \end{itemize}
+
+
+
+
+
+
 % \section{Motivation}
 
 % Legged robots have the potential to perform tasks that are extremely challenging or risky for humans, such as exploration of unknown locations or rescue operations. The recent \gls{darpa} SubT challenge (2018-2021) was a clear demonstration of the advantages of such platforms for exploration in urban and underground environments~\cite{Ackerman2022}. When the challenge started in 2018, 3 out of 11 teams were using legged robots for the competition; 3 years later almost every team relied on them as their core platforms~\cite{Chung2023}. Their versatility when negotiating different kinds of terrain compared to wheeled robots, as well as their increased payload capabilities compared to aerial ones offer a good balance for their deployment in the field.
 
 % A key aspect of this success has been the impressive mobility skills achieved by the locomotion controllers developed by the research community over the last few years~\cite{Gangapurwala2020, Miki2022a, Kumar2021}, combined with the consolidation of commercial platforms such as the Boston Dynamics' Spot~\cite{BostonDynamics} and ANYbotics' ANYmal~\cite{Anybotics} quadrupeds, and humanoids such as the Agility Robotics' Digit~\cite{AgilityRobotics}. This offers an unprecedented scenario for their mass adoption in applications such as last-mile delivery, industrial inspection, monitoring, or rescue.
 
-% The new locomotion controllers have unlocked new environments where legged robots can operate: not only warehouses with flat terrain but also industrial environments with complex staircases~\cite{BostonDynamics}, urban and disaster scenarios~\cite{Lee2020}, underground environments~\cite{Miki2022a}, as well as natural scenes such as forests and grasslands~\cite{Kumar2021}. However, this comes with new challenges: while legged robots \emph{can now walk} on challenging terrain, this does not necessarily guarantee that they can \emph{execute autonomous missions} in such environments. For example, a legged robot might have the capacity to walk up a staircase given by its hardware design and locomotion control, but if a motion planner does not consider staircases as valid planning areas such advanced capabilities are futile. 
-
-% As a consequence, moving from low-level locomotion problems to higher-level tasks such as navigation and mission planning is one of the main research challenges for legged robotics nowadays~\cite{Wellhausen2022}.
-
-% \begin{figure}[t]
-% 	\centering
-% 	\includegraphics[width=\textwidth]{figures/motivation/motivation.jpg}
+% The new locomotion controllers have unlocked new environments where legged robots can operate: not only warehouses with flat terrain but also industrial environments with complex staircases~\cite{BostonDynamics}, urban and disaster scenarios~\cite{Lee2020}, underground environments~\cite{Miki2022a}, as well as natural scenes such as foThe main objectives are to evaluate the performance of existing LiDAR-based place recognition models in dense forest environments.motivation/motivation.jpg}
 % 	\caption{Autonomous deployments of legged robots using the contributions presented in this thesis. They include industrial environments, underground mines, public parks, and forests.}
 % 	\label{fig:motivation}
 % \end{figure}
@@ -103,40 +106,6 @@ In this report, I showed
 % \end{itemize}
 
 
-% \section{Publications}
-% \label{sec:thesis-publications}
-% The previous contributions have been materialised through three first-author peer-reviewed publications developed during this project. Additional contributions include six non-first-author peer-reviewed articles. Other open-source packages and tutorials are listed in \appref{app:A}. 
-
-% \subsection{First-author Publications}
-% \begin{enumerate}[leftmargin=*]
-% 	\item \highlight{Mattamala, M.}, Ramezani, Camurri, M., Fallon, M. (2021). Learning Camera Performance Models for Active Multi-Camera Visual Teach and Repeat. \emph{IEEE International Conference on Robotics and Automation (ICRA)}. \cite{Mattamala2021}
-% 	%
-% 	\item \highlight{Mattamala, M.}, Chebrolu, N., Fallon, M. (2022). An Efficient Locally Reactive Controller for Safe Navigation in Visual Teach and Repeat Missions. \emph{IEEE Robotics and Automation Letters (RA-L)}. \cite{Mattamala2022}
-% 	%
-% 	\item Frey, J.*, \highlight{Mattamala, M.}*, Chebrolu, N., Cadena, C., Fallon, M., Hutter, M. (2023). Fast Traversability Estimation for Wild Visual Navigation. \emph{Robotics: Science and Systems}. \cite{Frey2023} (*equal contribution.)
-% \end{enumerate}
-
-% % \subsection{Draft}
-% % \begin{enumerate}[leftmargin=*]
-% % 	\item \highlight{Mattamala, M.}, Frey, J., Chebrolu, N., Casseau, B., Tuna, T., Cadena, C., Hutter, M., Fallon, M. (2023) Conceptualization and Field Deployment of a Legged Forest Ranger Robot. \emph{In preparation}. 
-% % \end{enumerate}
-
-% \subsection{Co-authored Publications}
-% \begin{enumerate}[leftmargin=*]
-%     \item Ramezani, M., Wang, Y., Camurri, M., Wisth, D., \highlight{Mattamala, M.}, Fallon, M. (2020). The Newer College Dataset: Handheld LiDAR, Inertial and Vision with Ground Truth. \emph{IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}. \cite{Ramezani2020b}
-%     %
-% 	\item Wang, Y., Ramezani, M., \highlight{Mattamala, M.}, Fallon, M. (2021). Scalable and Elastic LiDAR Reconstruction in Complex Environments Through Spatial Analysis. \emph{European Conference on Mobile Robots (ECMR)}. \cite{Wang2021}
-% 	%
-% 	\item Ramezani, M., \highlight{Mattamala, M.}, Fallon, M. (2022). AEROS: Adaptive RObust least-Squares for Graph-Based SLAM. \emph{Frontiers in Robotics and AI}. \cite{Ramezani2022}
-% 	%
-% 	\item Wang, Y., Ramezani, M., \highlight{Mattamala, M.}, Digumarti, T., Fallon, M. (2022). Strategies for Large Scale Elastic and Semantic LiDAR Reconstruction. \emph{Robotics and Autonomous Systems}. \cite{Wang2022}
-% 	%
-% 	\item Tranzatto, M., Dharmadhikari, M., Bernreiter, \etal{}, including \highlight{Mattamala, M.} 
-%     %L., Camurri, M., Khattak, S., Mascarich, F., Pfreundschuh, P., Wisth, D., Zimmermann, S., Kulkarni, M., Reijgwart, V., Casseau, B., Homberger, T., Petris, P.D., Ott, L., Tubby, W., Waibel, G., Nguyen, H., Cadena, C., Buchanan, R., Wellhausen, L., Khedekar, N., Andersson, O., Zhang, L., Miki, T., Dang, T., \highlight{Mattamala, M.}, Montenegro, M., Meyer, K., Wu, X., Briod, A., Mueller, M.W., Fallon, M.F., Siegwart, R.Y., Hutter, M., Alexis, K. 
-%     (2023). Team CERBERUS Wins the DARPA Subterranean Challenge: Technical Overview and Lessons Learned. \emph{Field Robotics}. \cite{Tranzatto2023}
-% 		%
-% 	\item Erni, G., Frey, J., Miki, T., \highlight{Mattamala, M.}, Hutter, M (2023).  MEM: Multi-Modal Elevation Mapping for Robotics and Learning. \emph{IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}.
-% \end{enumerate}
 
 % \section{Thesis Outline}
 % This thesis is presented in the \emph{integrated format} of the University of Oxford. Chapters 4-6 consist of peer-reviewed publications, each one accompanied by additional discussion as well as a Statement of Authorship declaring the author's contribution to each work. Chapter 7 is an original chapter describing a real-world application.

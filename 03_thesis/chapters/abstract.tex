@@ -1,9 +1,25 @@
 % % max 300 words
 
-% The recent advances in legged locomotion control have made legged robots walk up staircases, go deep into underground caves, and walk in the forest. Nevertheless, autonomously achieving this task is still a challenge. Navigating and acomplishing missions in the wild relies not only on robust low-level controllers but also higher-level representations and perceptual systems that are aware of the robot's capabilities. 
+Many LiDAR place recognition systems have been
+developed and tested speciﬁcally for urban driving scenarios.
+Their capabilities in natural environments such as forests and
+woodlands have been studied less closely. In this thesis, we
+analyze the capabilities of four different LiDAR place recog-
+nition systems, both handcrafted and learning-based methods,
+using LiDAR data collected with a handheld device and legged
+robot in dense forest environments. In particular, we focused on
+evaluating localization where there is signiﬁcant transnational
+and orientation difference between corresponding LiDAR scan
+pairs. This is particularly important for forest survey systems
+where the sensor or robot does not follow a deﬁned road or
+path. 
+Extending our analysis we then incorporated the best
+performing approach (called Logg3dNet) into a full 6-DoF pose
+estimation system (with several layers of outlier checks and
+ICP for precise registration). We demonstrate performance in
+three operational modes: online SLAM, ofﬂine multi-mission
+SLAM map merging, and relocalization into a prior map.
+Our place recognition performance analysis was carried out
+using data captured in forest in three different countries. We demonstrate reliable loop closures upto 15\,m distance away inside dense forests.  \\
 
-% This thesis addresses the navigation problem for legged robots. The contributions are four systems designed to exploit unique characteristics of these platforms, from the sensing setup to their advanced mobility skills over different terrain. The systems address localisation, scene understanding, and local planning, and advance the capabilities of legged robots in challenging environments.
-
-% The first contribution tackles localisation with multi-camera setups available on legged platforms. It proposes a strategy to actively switch between the cameras and stay localised while operating in a visual teach and repeat context---in spite of transient changes in the environment. The second contribution focuses on local planning, effectively adding a safety layer for robot navigation. The approach uses a local map built on-the-fly to generate efficient vector field representations that enable fast and reactive navigation. The third contribution demonstrates how to improve local planning in natural environments by learning robot-specific traversability from demonstrations. The approach leverages classical and learning-based methods to enable online, onboard traversability learning. These systems are demonstrated via different robot deployments on industrial facilities, underground mines, and parklands.
-
-% The thesis concludes by presenting a real-world application: an autonomous forest inventory system with legged robots. This last contribution presents a mission planning system for autonomous surveying as well as a data analysis pipeline to extract forestry attributes. The approach was experimentally validated in a field campaign in Finland, evidencing the potential that legged platforms offer for future applications in the wild.
+This work has been submitted to IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2024. Upon acceptance, the paper will be published in the conference proceedings. For future updates, you can access the paper through the following link: \url{Upload sometime} and video demonstration at \url{Upload sometime}.
