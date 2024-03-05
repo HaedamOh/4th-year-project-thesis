@@ -2,4 +2,5 @@
 *.mtc
 *.pdf
 *.log
-
+01_transfer_of_status/
+02_confirmation_of_status/
