@@ -4,3 +4,5 @@
 *.log
 01_transfer_of_status/
 02_confirmation_of_status/
+*main.pdf
+*.gz
