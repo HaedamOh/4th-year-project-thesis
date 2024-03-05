@@ -1,0 +1,108 @@
+% =============================================================================
+% Custom mdframes
+% =============================================================================
+\usepackage{mdframed}
+
+% Reference: https://texdoc.org/serve/mdframed/0
+\mdfdefinestyle{ieeepermission}{
+  linewidth = 0pt,
+  outerlinewidth = 0pt, %
+  outerlinewidth = 0, %
+  backgroundcolor=gray!10, %
+  leftmargin  = 0, %
+  rightmargin = 0, %
+}
+
+% =============================================================================
+% Hyperref config
+% =============================================================================
+% Setups the hyperref package
+% Colors for hyperref from https://tex.stackexchange.com/a/599739
+% Set 2
+\definecolor{MK_Two_One}{RGB}{178,24,43}
+\definecolor{MK_Two_Two}{RGB}{239,138,98}
+\definecolor{MK_Two_Three}{RGB}{253,219,199}
+\definecolor{MK_Two_Four}{RGB}{209,229,240}
+\definecolor{MK_Two_Five}{RGB}{103,169,207}
+\definecolor{MK_Two_Six}{RGB}{33,102,172}
+
+% Custom
+\definecolor{CustomRed}{RGB}{190,0,40}
+\definecolor{CustomGreen}{RGB}{0,170,80}
+\definecolor{CustomBlue}{RGB}{0,90,180}
+\definecolor{CustomLightGrey}{RGB}{240,240,240}
+
+% To fix compatibility of backref with roman numbers
+% https://tex.stackexchange.com/a/302668
+
+% setup new colors 2
+\hypersetup{
+  %bookmarks=true
+  %,pdfpagelabels=false
+  %,backref
+  ,colorlinks=true % Color for the index links
+  ,linkcolor=black
+  ,citecolor=CustomBlue
+  ,filecolor=CustomBlue
+  ,urlcolor= CustomBlue
+  ,menucolor=CustomRed
+  ,runcolor=CustomRed
+  ,linkbordercolor=CustomRed
+  ,citebordercolor=CustomRed
+  ,filebordercolor=CustomRed
+  ,urlbordercolor=CustomBlue
+  ,menubordercolor=CustomRed
+  ,runbordercolor=CustomRed
+}
+
+% Backref (bibliography links)
+\DefineBibliographyStrings{english}{%
+  backrefpage = {page},% originally "cited on page"
+  backrefpages = {pages},% originally "cited on pages"
+}
+
+% =============================================================================
+% Epigraph
+% =============================================================================
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{0.6\textwidth}
+\setlength{\epigraphrule}{0pt}
+
+% =============================================================================
+% Wrap text in tables
+% =============================================================================
+\usepackage[raggedrightboxes]{ragged2e}
+
+% =============================================================================
+% SI units config
+% =============================================================================
+\sisetup{range-phrase=--,
+         range-units = single,
+         per-mode = symbol,
+         detect-weight = true,
+         free-standing-units,
+         product-units = single,
+         separate-uncertainty=true,
+         multi-part-units=single
+}
+
+% =============================================================================
+% mleftright improves spaces in bmatrices
+% https://stackoverflow.com/a/55486134
+% =============================================================================
+\usepackage{mleftright}
+
+% =============================================================================
+% lengthconvert
+% To convert and show 
+% =============================================================================
+\usepackage{lengthconvert}
+
+% =============================================================================
+% Required by tablesgenerator.com
+% =============================================================================
+\usepackage{booktabs}
+\usepackage{lscape}
+\usepackage{threeparttable}
+\usepackage{tablefootnote}
+\usepackage{colortbl}

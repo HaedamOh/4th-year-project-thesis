@@ -1,0 +1,1224 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{nty/global//global/global}
+  \entry{arandjelovic2018pami}{article}{}
+    \name{author}{5}{}{%
+      {{hash=AR}{%
+         family={Arandjelović},
+         familyi={A\bibinitperiod},
+         given={Relja},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=GP}{%
+         family={Gronat},
+         familyi={G\bibinitperiod},
+         given={Petr},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=TA}{%
+         family={Torii},
+         familyi={T\bibinitperiod},
+         given={Akihiko},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=PT}{%
+         family={Pajdla},
+         familyi={P\bibinitperiod},
+         given={Tomas},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Sivic},
+         familyi={S\bibinitperiod},
+         given={Josef},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \keyw{Image recognition;Image retrieval;Computer
+  architecture;Training;Image representation;Neural networks;Electronic
+  mail;Neural nets;image/video retrieval;computer vision;vision and scene
+  understanding;feature representation;object recognition}
+    \strng{namehash}{AR+1}
+    \strng{fullhash}{ARGPTAPTSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2017.2711011
+    \endverb
+    \field{number}{6}
+    \field{pages}{1437\bibrangedash 1451}
+    \field{title}{{NetVLAD: CNN Architecture for Weakly Supervised Place
+  Recognition}}
+    \field{volume}{40}
+    \field{year}{2018}
+  \endentry
+
+  \entry{besl1992icp}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BPJ}{%
+         family={Besl},
+         familyi={B\bibinitperiod},
+         given={Paul\bibnamedelima J.},
+         giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=MND}{%
+         family={McKay},
+         familyi={M\bibinitperiod},
+         given={Neil\bibnamedelima D.},
+         giveni={N\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BPJMND1}
+    \strng{fullhash}{BPJMND1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \verb{doi}
+    \verb 10.1109/34.121791
+    \endverb
+    \field{number}{2}
+    \field{pages}{239\bibrangedash 256}
+    \field{title}{A Method for Registration of 3-D Shapes}
+    \verb{url}
+    \verb https://doi.org/10.1109/34.121791
+    \endverb
+    \field{volume}{14}
+    \field{journaltitle}{{IEEE} Trans. Pattern Anal. Mach. Intell.}
+    \field{year}{1992}
+  \endentry
+
+  \entry{fischler1981ransac}{article}{}
+    \name{author}{2}{}{%
+      {{hash=FMA}{%
+         family={Fischler},
+         familyi={F\bibinitperiod},
+         given={Martin\bibnamedelima A.},
+         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=BRC}{%
+         family={Bolles},
+         familyi={B\bibinitperiod},
+         given={Robert\bibnamedelima C.},
+         giveni={R\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \keyw{automated cartography, camera calibration, image matching, location
+  determination, model fitting, scene analysis}
+    \strng{namehash}{FMABRC1}
+    \strng{fullhash}{FMABRC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{abstract}{%
+    A new paradigm, Random Sample Consensus (RANSAC), for fitting a model to
+  experimental data is introduced. RANSAC is capable of interpreting/smoothing
+  data containing a significant percentage of gross errors, and is thus ideally
+  suited for applications in automated image analysis where interpretation is
+  based on the data provided by error-prone feature detectors. A major portion
+  of this paper describes the application of RANSAC to the Location
+  Determination Problem (LDP): Given an image depicting a set of landmarks with
+  known locations, determine that point in space from which the image was
+  obtained. In response to a RANSAC requirement, new results are derived on the
+  minimum number of landmarks needed to obtain a solution, and algorithms are
+  presented for computing these minimum-landmark solutions in closed form.
+  These results provide the basis for an automatic system that can solve the
+  LDP under difficult viewing%
+    }
+    \verb{doi}
+    \verb 10.1145/358669.358692
+    \endverb
+    \field{issn}{0001-0782}
+    \field{number}{6}
+    \field{pages}{381–395}
+    \field{title}{Random sample consensus: a paradigm for model fitting with
+  applications to image analysis and automated cartography}
+    \verb{url}
+    \verb https://doi.org/10.1145/358669.358692
+    \endverb
+    \field{volume}{24}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{Commun. ACM}
+    \field{year}{1981}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{kim2021tro}{article}{}
+    \name{author}{3}{}{%
+      {{hash=KG}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Giseop},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Choi},
+         familyi={C\bibinitperiod},
+         given={Sunwook},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Ayoung},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KGCSKA1}
+    \strng{fullhash}{KGCSKA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{title}{{Scan Context++: Structural Place Recognition Robust to
+  Rotation and Lateral Variations in Urban Environments}}
+    \field{year}{2021}
+  \endentry
+
+  \entry{kim2018iros}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=KG}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Giseop},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Ayoung},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{KGKA1}
+    \strng{fullhash}{KGKA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{pages}{4802\bibrangedash 4809}
+    \field{title}{Scan context: Egocentric spatial descriptor for place
+  recognition within 3d point cloud map}
+    \field{year}{2018}
+  \endentry
+
+  \entry{kim2020icra}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=KG}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Giseop},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=PYS}{%
+         family={Park},
+         familyi={P\bibinitperiod},
+         given={Yeong\bibnamedelima Sang},
+         giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+      {{hash=CY}{%
+         family={Cho},
+         familyi={C\bibinitperiod},
+         given={Younghun},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=JJ}{%
+         family={Jeong},
+         familyi={J\bibinitperiod},
+         given={Jinyong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Ayoung},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \keyw{Laser radar;Radar imaging;Three-dimensional displays;Urban
+  areas;Simultaneous localization and mapping}
+    \strng{namehash}{KG+1}
+    \strng{fullhash}{KGPYSCYJJKA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1109/ICRA40945.2020.9197298
+    \endverb
+    \field{pages}{6246\bibrangedash 6253}
+    \field{title}{{MulRan: Multimodal Range Dataset for Urban Place
+  Recognition}}
+    \field{year}{2020}
+  \endentry
+
+  \entry{knights2023icra}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=KJ}{%
+         family={Knights},
+         familyi={K\bibinitperiod},
+         given={Joshua},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=VK}{%
+         family={Vidanapathirana},
+         familyi={V\bibinitperiod},
+         given={Kavisha},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=RM}{%
+         family={Ramezani},
+         familyi={R\bibinitperiod},
+         given={Milad},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Sridharan},
+         familyi={S\bibinitperiod},
+         given={Sridha},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FC}{%
+         family={Fookes},
+         familyi={F\bibinitperiod},
+         given={Clinton},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Moghadam},
+         familyi={M\bibinitperiod},
+         given={Peyman},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{KJ+1}
+    \strng{fullhash}{KJVKRMSSFCMP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{pages}{11322\bibrangedash 11328}
+    \field{title}{{Wild-Places: A Large-Scale Dataset for Lidar Place
+  Recognition in Unstructured Natural Environments}}
+    \field{year}{2023}
+  \endentry
+
+  \entry{komorowski2021wacv}{inproceedings}{}
+    \name{author}{1}{}{%
+      {{hash=KJ}{%
+         family={Komorowski},
+         familyi={K\bibinitperiod},
+         given={Jacek},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KJ1}
+    \strng{fullhash}{KJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1109/WACV48630.2021.00183
+    \endverb
+    \field{pages}{1789\bibrangedash 1798}
+    \field{title}{{MinkLoc3D: Point Cloud Based Large-Scale Place Recognition}}
+    \field{year}{2021}
+  \endentry
+
+  \entry{komorowski2022ral}{article}{}
+    \name{author}{3}{}{%
+      {{hash=KJ}{%
+         family={Komorowski},
+         familyi={K\bibinitperiod},
+         given={Jacek},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=WM}{%
+         family={Wysoczanska},
+         familyi={W\bibinitperiod},
+         given={Monika},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=TT}{%
+         family={Trzcinski},
+         familyi={T\bibinitperiod},
+         given={Tomasz},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KJWMTT1}
+    \strng{fullhash}{KJWMTT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1109/LRA.2021.3133593
+    \endverb
+    \field{number}{2}
+    \field{pages}{722\bibrangedash 729}
+    \field{title}{EgoNN: Egocentric Neural Network for Point Cloud Based 6DoF
+  Relocalization at the City Scale}
+    \field{volume}{7}
+    \field{year}{2022}
+  \endentry
+
+  \entry{li2021iros}{inproceedings}{}
+    \name{author}{8}{}{%
+      {{hash=LL}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Lin},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=KX}{%
+         family={Kong},
+         familyi={K\bibinitperiod},
+         given={Xin},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Xiangrui},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=HT}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Tianxin},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=LW}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Wanlong},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=WF}{%
+         family={Wen},
+         familyi={W\bibinitperiod},
+         given={Feng},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=ZH}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Hongbo},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Yong},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LL+1}
+    \strng{fullhash}{LLKXZXHTLWWFZHLY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{L}
+    \field{sortinithash}{L}
+    \verb{doi}
+    \verb 10.1109/IROS51168.2021.9635904
+    \endverb
+    \field{pages}{2092\bibrangedash 2099}
+    \field{title}{SSC: Semantic Scan Context for Large-Scale Place Recognition}
+    \field{year}{2021}
+  \endentry
+
+  \entry{maddern2017ijrr}{article}{}
+    \name{author}{4}{}{%
+      {{hash=MW}{%
+         family={Maddern},
+         familyi={M\bibinitperiod},
+         given={Will},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=PG}{%
+         family={Pascoe},
+         familyi={P\bibinitperiod},
+         given={Geoffrey},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=LC}{%
+         family={Linegar},
+         familyi={L\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=NP}{%
+         family={Newman},
+         familyi={N\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {SAGE Publications Sage UK: London, England}%
+    }
+    \strng{namehash}{MW+1}
+    \strng{fullhash}{MWPGLCNP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{number}{1}
+    \field{pages}{3\bibrangedash 15}
+    \field{title}{1 year, 1000 km: The oxford robotcar dataset}
+    \field{volume}{36}
+    \field{year}{2017}
+  \endentry
+
+  \entry{pomerleau2013iros}{article}{}
+    \name{author}{4}{}{%
+      {{hash=PF}{%
+         family={Pomerleau},
+         familyi={P\bibinitperiod},
+         given={Fran{\c c}ois},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=CF}{%
+         family={Colas},
+         familyi={C\bibinitperiod},
+         given={Francis},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=SR}{%
+         family={Siegwart},
+         familyi={S\bibinitperiod},
+         given={Roland},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=MS}{%
+         family={Magnenat},
+         familyi={M\bibinitperiod},
+         given={St{\'e}phane},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{PF+1}
+    \strng{fullhash}{PFCFSRMS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{number}{3}
+    \field{pages}{133\bibrangedash 148}
+    \field{title}{{Comparing ICP Variants on Real-World Data Sets}}
+    \field{volume}{34}
+    \field{journaltitle}{Autonomous Robots}
+    \field{month}{02}
+    \field{year}{2013}
+  \endentry
+
+  \entry{proudman2022ras}{article}{}
+    \name{author}{5}{}{%
+      {{hash=PA}{%
+         family={Proudman},
+         familyi={P\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=RM}{%
+         family={Ramezani},
+         familyi={R\bibinitperiod},
+         given={Milad},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DST}{%
+         family={Digumarti},
+         familyi={D\bibinitperiod},
+         given={Sundara\bibnamedelima Tejaswi},
+         giveni={S\bibinitperiod\bibinitdelim T\bibinitperiod},
+      }}%
+      {{hash=CN}{%
+         family={Chebrolu},
+         familyi={C\bibinitperiod},
+         given={Nived},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=FM}{%
+         family={Fallon},
+         familyi={F\bibinitperiod},
+         given={Maurice},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \keyw{Forestry, SLAM, Real-time Operation, Automated forest inventory}
+    \strng{namehash}{PA+1}
+    \strng{fullhash}{PARMDSTCNFM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{abstract}{%
+    While mobile LiDAR sensors are increasingly used to scan in ecology and
+  forestry applications, reconstruction and characterization are typically
+  carried out offline. Motivated by this, we present an online LiDAR system
+  which is capable of running on a handheld device. Our system is capable of
+  creating 3D point cloud reconstructions of large forest areas, segment and
+  track individual trees, and create an inventory for the detected trees.
+  Segments relating to each tree are accumulated over time, and tree models are
+  completed as more scans are captured from different perspectives. The LiDAR
+  scans are processed in an online fashion, and feedback can be provided to the
+  operator via a screen mounted on the device. This allows the operator to
+  ensure the desired area is mapped satisfactorily without any gaps or missing
+  sections. We employ a pose-graph based SLAM system with loop closures to
+  correct for drift errors allowing us to map large areas accurately. Our
+  mapping system also provides multi-session capability where data captured
+  during different runs can be automatically merged in a post-processing step.
+  In this work, we estimate the Diameter at Breast Height (DBH) of individual
+  trees as an example parameter for the forest inventory. The DBH is estimated
+  online by fitting a cylinder to each tree trunk through a least-squares
+  optimization within a RANSAC loop. We demonstrate our mapping approach
+  operating in two different forests (both ecological and commercial) with the
+  total travel distance spanning several kilometres. Further, we also provide
+  experimental results comparing our DBH estimation to ground-truth
+  measurements recorded manually in an ecological forest (Wytham Woods,
+  Oxford). We demonstrate that our DBH estimates are within ∼7 cm accuracy
+  for 90% of individual trees detected in the dataset.%
+    }
+    \verb{doi}
+    \verb https://doi.org/10.1016/j.robot.2022.104240
+    \endverb
+    \field{issn}{0921-8890}
+    \field{pages}{104240}
+    \field{title}{Towards real-time forest inventory using handheld LiDAR}
+    \verb{url}
+    \verb https://www.sciencedirect.com/science/article/pii/S0921889022001397
+    \endverb
+    \field{volume}{157}
+    \field{year}{2022}
+  \endentry
+
+  \entry{radenovic2019pami}{article}{}
+    \name{author}{3}{}{%
+      {{hash=RF}{%
+         family={Radenović},
+         familyi={R\bibinitperiod},
+         given={Filip},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=TG}{%
+         family={Tolias},
+         familyi={T\bibinitperiod},
+         given={Giorgos},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=CO}{%
+         family={Chum},
+         familyi={C\bibinitperiod},
+         given={Ondřej},
+         giveni={O\bibinitperiod},
+      }}%
+    }
+    \keyw{Image retrieval;Training;Task analysis;Training
+  data;Three-dimensional displays;Standards;Solid modeling;Image
+  representation, processing and computer vision, computing methodologies,
+  neural nets, pattern recognition, applications}
+    \strng{namehash}{RFTGCO1}
+    \strng{fullhash}{RFTGCO1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2018.2846566
+    \endverb
+    \field{number}{7}
+    \field{pages}{1655\bibrangedash 1668}
+    \field{title}{{Fine-Tuning CNN Image Retrieval with No Human Annotation}}
+    \field{volume}{41}
+    \field{year}{2019}
+  \endentry
+
+  \entry{tinchev2018iros}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=TG}{%
+         family={Tinchev},
+         familyi={T\bibinitperiod},
+         given={Georgi},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=NS}{%
+         family={Nobili},
+         familyi={N\bibinitperiod},
+         given={Simona},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FM}{%
+         family={Fallon},
+         familyi={F\bibinitperiod},
+         given={Maurice},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \keyw{Feature extraction;Vegetation;Three-dimensional
+  displays;Forestry;Reliability;Clutter;Hidden Markov models}
+    \strng{namehash}{TGNSFM1}
+    \strng{fullhash}{TGNSFM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \verb{doi}
+    \verb 10.1109/IROS.2018.8594042
+    \endverb
+    \field{pages}{8239\bibrangedash 8246}
+    \field{title}{Seeing the Wood for the Trees: Reliable Localization in Urban
+  and Natural Environments}
+    \field{year}{2018}
+  \endentry
+
+  \entry{triest2022icra}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=TS}{%
+         family={Triest},
+         familyi={T\bibinitperiod},
+         given={Samuel},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Sivaprakasam},
+         familyi={S\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=WSJ}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Sean\bibnamedelima J},
+         giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=WW}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Wenshan},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=JAM}{%
+         family={Johnson},
+         familyi={J\bibinitperiod},
+         given={Aaron\bibnamedelima M},
+         giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Scherer},
+         familyi={S\bibinitperiod},
+         given={Sebastian},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{TS+1}
+    \strng{fullhash}{TSSMWSJWWJAMSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{booktitle}{2022 International Conference on Robotics and Automation
+  (ICRA)}
+    \field{pages}{2546\bibrangedash 2552}
+    \field{title}{Tartandrive: A large-scale dataset for learning off-road
+  dynamics models}
+    \field{year}{2022}
+  \endentry
+
+  \entry{vidanapathirana2021icra}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=VK}{%
+         family={Vidanapathirana},
+         familyi={V\bibinitperiod},
+         given={Kavisha},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Moghadam},
+         familyi={M\bibinitperiod},
+         given={Peyman},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=HB}{%
+         family={Harwood},
+         familyi={H\bibinitperiod},
+         given={Ben},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=ZM}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Muming},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Sridharan},
+         familyi={S\bibinitperiod},
+         given={Sridha},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FC}{%
+         family={Fookes},
+         familyi={F\bibinitperiod},
+         given={Clinton},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{VK+1}
+    \strng{fullhash}{VKMPHBZMSSFC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{V}
+    \field{sortinithash}{V}
+    \field{pages}{5075\bibrangedash 5081}
+    \field{title}{Locus: Lidar-based place recognition using spatiotemporal
+  higher-order pooling}
+    \field{year}{2021}
+  \endentry
+
+  \entry{vidanapathirana2023ral}{article}{}
+    \name{author}{4}{}{%
+      {{hash=VK}{%
+         family={Vidanapathirana},
+         familyi={V\bibinitperiod},
+         given={Kavisha},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Moghadam},
+         familyi={M\bibinitperiod},
+         given={Peyman},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Sridharan},
+         familyi={S\bibinitperiod},
+         given={Sridha},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FC}{%
+         family={Fookes},
+         familyi={F\bibinitperiod},
+         given={Clinton},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{VK+1}
+    \strng{fullhash}{VKMPSSFC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{V}
+    \field{sortinithash}{V}
+    \field{number}{5}
+    \field{pages}{2494\bibrangedash 2501}
+    \field{title}{Spectral Geometric Verification: Re-Ranking Point Cloud
+  Retrieval for Metric Localization}
+    \field{volume}{8}
+    \field{year}{2023}
+  \endentry
+
+  \entry{vidanapathirana2022icra}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=VK}{%
+         family={Vidanapathirana},
+         familyi={V\bibinitperiod},
+         given={Kavisha},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=RM}{%
+         family={Ramezani},
+         familyi={R\bibinitperiod},
+         given={Milad},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Moghadam},
+         familyi={M\bibinitperiod},
+         given={Peyman},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Sridharan},
+         familyi={S\bibinitperiod},
+         given={Sridha},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FC}{%
+         family={Fookes},
+         familyi={F\bibinitperiod},
+         given={Clinton},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{VK+1}
+    \strng{fullhash}{VKRMMPSSFC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{V}
+    \field{sortinithash}{V}
+    \field{pages}{2215\bibrangedash 2221}
+    \field{title}{{LoGG3D-Net: Locally guided global descriptor learning for 3D
+  place recognition}}
+    \field{year}{2022}
+  \endentry
+
+  \entry{wang2020icra}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Han},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=WC}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Chen},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=XL}{%
+         family={Xie},
+         familyi={X\bibinitperiod},
+         given={Lihua},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WHWCXL1}
+    \strng{fullhash}{WHWCXL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{pages}{2095\bibrangedash 2101}
+    \field{title}{Intensity Scan Context: Coding Intensity and Geometry
+  Relations for Loop Closure Detection}
+    \field{year}{2020}
+  \endentry
+
+  \entry{wisth2023tro}{article}{}
+    \name{author}{3}{}{%
+      {{hash=WD}{%
+         family={Wisth},
+         familyi={W\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={Camurri},
+         familyi={C\bibinitperiod},
+         given={Marco},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=FM}{%
+         family={Fallon},
+         familyi={F\bibinitperiod},
+         given={Maurice},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \keyw{Robots;Legged locomotion;Robot sensing systems;Foot;Kinematics;Laser
+  radar;Cameras;Field robots;legged robots;localization;sensor fusion}
+    \strng{namehash}{WDCMFM1}
+    \strng{fullhash}{WDCMFM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \verb{doi}
+    \verb 10.1109/TRO.2022.3193788
+    \endverb
+    \field{number}{1}
+    \field{pages}{309\bibrangedash 326}
+    \field{title}{VILENS: Visual, Inertial, Lidar, and Leg Odometry for
+  All-Terrain Legged Robots}
+    \field{volume}{39}
+    \field{journaltitle}{IEEE Transactions on Robotics}
+    \field{year}{2023}
+  \endentry
+
+  \entry{xia2021cvpr}{inproceedings}{}
+    \name{author}{7}{}{%
+      {{hash=XY}{%
+         family={Xia},
+         familyi={X\bibinitperiod},
+         given={Yan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=XY}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Yusheng},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Shuang},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=WR}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Rui},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Du},
+         familyi={D\bibinitperiod},
+         given={Juan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=CD}{%
+         family={Cremers},
+         familyi={C\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=SU}{%
+         family={Stilla},
+         familyi={S\bibinitperiod},
+         given={Uwe},
+         giveni={U\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XY+1}
+    \strng{fullhash}{XYXYLSWRDJCDSU1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{X}
+    \field{sortinithash}{X}
+    \field{pages}{11348\bibrangedash 11357}
+    \field{title}{{SOE-Net: A Self-Attention and Orientation Encoding Network
+  for Point Cloud Based Place Recognition}}
+    \field{year}{2021}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{xu2021transloc3d}{article}{}
+    \name{author}{6}{}{%
+      {{hash=XTX}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Tian-Xing},
+         giveni={T\bibinithyphendelim X\bibinitperiod},
+      }}%
+      {{hash=GYC}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={Yuan-Chen},
+         giveni={Y\bibinithyphendelim C\bibinitperiod},
+      }}%
+      {{hash=LZ}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Zhiqiang},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=YG}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Ge},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=LYK}{%
+         family={Lai},
+         familyi={L\bibinitperiod},
+         given={Yu-Kun},
+         giveni={Y\bibinithyphendelim K\bibinitperiod},
+      }}%
+      {{hash=ZSH}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Song-Hai},
+         giveni={S\bibinithyphendelim H\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XTX+1}
+    \strng{fullhash}{XTXGYCLZYGLYKZSH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{X}
+    \field{sortinithash}{X}
+    \field{title}{{TransLoc3D: Point cloud based large-scale place recognition
+  using adaptive receptive fields}}
+    \field{year}{2021}
+  \endentry
+
+  \entry{yuan2023icra}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=YC}{%
+         family={Yuan},
+         familyi={Y\bibinitperiod},
+         given={Chongjian},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={Jiarong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZZ}{%
+         family={Zou},
+         familyi={Z\bibinitperiod},
+         given={Zuhao},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=HX}{%
+         family={Hong},
+         familyi={H\bibinitperiod},
+         given={Xiaoping},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=ZF}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Fu},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{YC+1}
+    \strng{fullhash}{YCLJZZHXZF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Y}
+    \field{sortinithash}{Y}
+    \field{pages}{1897\bibrangedash 1903}
+    \field{title}{{STD: Stable Triangle Descriptor for 3D place recognition}}
+    \field{year}{2023}
+  \endentry
+
+  \entry{zhang2019cvpr}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=ZW}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Wenxiao},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=XC}{%
+         family={Xiao},
+         familyi={X\bibinitperiod},
+         given={Chunxia},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZWXC1}
+    \strng{fullhash}{ZWXC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{pages}{12436\bibrangedash 12445}
+    \field{title}{{PCAN: 3D attention map learning using contextual information
+  for point cloud based retrieval}}
+    \field{year}{2019}
+  \endentry
+
+  \entry{zhou2021icra}{inproceedings}{}
+    \name{author}{7}{}{%
+      {{hash=ZZ}{%
+         family={Zhou},
+         familyi={Z\bibinitperiod},
+         given={Zhicheng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=ZC}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Cheng},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=AD}{%
+         family={Adolfsson},
+         familyi={A\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Su},
+         familyi={S\bibinitperiod},
+         given={Songzhi},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GY}{%
+         family={Gao},
+         familyi={G\bibinitperiod},
+         given={Yang},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=DT}{%
+         family={Duckett},
+         familyi={D\bibinitperiod},
+         given={Tom},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=SL}{%
+         family={Sun},
+         familyi={S\bibinitperiod},
+         given={Li},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZZ+1}
+    \strng{fullhash}{ZZZCADSSGYDTSL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \verb{doi}
+    \verb 10.1109/ICRA48506.2021.9560932
+    \endverb
+    \field{pages}{5654\bibrangedash 5660}
+    \field{title}{{NDT-Transformer: Large-Scale 3D Point Cloud Localisation
+  using the Normal Distribution Transform Representation}}
+    \field{year}{2021}
+  \endentry
+\enddatalist
+\endinput

@@ -1,0 +1,314 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+%\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{52}}%
+\newcommand{\xmark}{\ding{56}}%
+\usepackage{etoolbox}	% robustify command
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% General utilities
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% etal command
+\newcommand{\etal}{\emph{et al.}\ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Probability
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\prob}[1]{\mathrm{P}\left( #1 \right)}
+
+% Gaussian
+\newcommand{\DistributionGaussian}[2]{\mathcal{N}(#1,#2)}
+
+% Noisy format (tilde)
+\newcommand{\noisy}[1]{\tilde{#1}}
+
+% Estimate (hat upper)
+\newcommand{\estimate}[1]{\hat{#1}}
+
+% Mahalanobis norm
+\newcommand{\mahalanobisNorm}[2]{\lVert{#1}\rVert^{2}_{#2}}
+
+% Huber norm
+\newcommand{\huberNorm}[2]{\rho_h\left(#1\right)_{#2}}
+
+% Covariance of (text version)
+\newcommand{\Cov}[1]{\mathrm{Cov}\!\left(#1\right)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Optimization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Optimum notation (superscript asterisk)
+\newcommand{\optimum}[1]{{#1}^{*}}
+
+% partial derivative
+\newcommand{\diffPartial}[2]{\displaystyle \frac{\partial #1}{\partial #2}}
+
+% argmin
+\newcommand{\argmin}{\operatornamewithlimits{arg\,min}}
+% argmax
+\newcommand{\argmax}{\operatornamewithlimits{arg\,max}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Geometry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Euclidean space
+\newcommand{\Rn}[1]{\mathbb{R}^{#1}}
+
+% Number systems
+\newcommand{\Nn}[1]{\mathbb{N}^{#1}}
+\newcommand{\Zn}[1]{\mathbb{Z}^{#1}}
+\newcommand{\Qn}[1]{\mathbb{Q}^{#1}}
+\newcommand{\Cn}[1]{\mathbb{C}^{#1}}
+
+% Trace
+\newcommand{\traceNew}[1]{\mathrm{tr}(#1)}
+
+% skew symmetric matrix
+\newcommand{\matrixSkew}[3]{
+	\begin{bmatrix}
+		  0 & -#3 &  #2 \\
+		 #3 &   0 & -#1 \\
+		-#2 &  #1 &   0
+	\end{bmatrix}
+	}
+
+% Transformation Matrix
+\newcommand{\matrixRigidBody}[2]{
+	\left[
+	\begin{array}{cc}
+		#1  &  #2 \\
+		0_{1\times3} &   1
+	\end{array}
+	\right]
+}
+
+% Extrinsic Matrix
+\newcommand{\matrixExtrinsic}[2]{
+	\left[
+	\begin{array}{c|c}
+		#1 & #2
+	\end{array}
+	\right]
+}
+
+% camera projection model
+\newcommand{\cameraProjectionModel}[2]{
+	\notatVector{\pi}({#1}, {#2})
+}
+
+% camera depth map model (LSD SLAM)
+\newcommand{\cameraDepthMapModel}[3]{
+	\notatVector{\pi}({#1}, {#2}, {#3})
+}
+
+% inverse camera projection model
+\newcommand{\inverseCameraProjectionModel}[3]{
+	\notatVector{\pi}^{-1}({#1}, {#2}, {#3})
+}
+
+
+
+% Frame
+% subarrow used in the frame notation
+\newcommand{\subarrow}[1]{
+	\mathord{
+		\renewcommand{\arraystretch}{0}
+		\begin{array}[t]{@{}c@{}l@{}}
+			#1\\[2pt]
+			\hspace{-2pt}\scriptstyle\longrightarrow
+		\end{array}
+		\kern\scriptspace
+	}
+}
+% frame definition
+\newcommand{\notatFrame}[1]{\subarrow{\mathcal{F}}{}_{\scriptscriptstyle {#1}}}
+\newcommand{\notatFrameSimple}[2]{\mathcal{#1}_{#2}}
+
+% Format for matrices, vectors, scalars, homogeneous points and manifolds
+% Single letters
+\newcommand{\notatMatrix}[1]{\boldsymbol{\mathrm{#1}}}
+\newcommand{\notatVector}[1]{\boldsymbol{\mathrm{#1}}}
+\newcommand{\notatScalar}[1]{{#1}}
+\newcommand{\notatHomog}[1]{\boldsymbol{{#1}}}
+\newcommand{\notatManifold}[1]{\mathcal{\MakeUppercase{#1}}}
+
+% Letters with right subscript
+\newcommand{\notationMatrix}[2]{\boldsymbol{\mathrm{#1}}_{\scriptscriptstyle #2}}
+\newcommand{\notationVector}[2]{\boldsymbol{\mathrm{#1}}_{\scriptscriptstyle #2}}
+\newcommand{\notationScalar}[2]{{#1}_{\scriptscriptstyle #2}}
+\newcommand{\notationHomog}[2]{\boldsymbol{{#1}}_{\scriptscriptstyle #2}}
+\newcommand{\notationManifold}[2]{\mathcal{\MakeUppercase{#1}}_{\scriptscriptstyle #2}}
+
+% Letters with left and right subscript
+\newcommand{\notationMatrixFrame}[3]{{\scriptscriptstyle_#2}\boldsymbol{\mathrm{#1}}_{\scriptscriptstyle #3}}
+\newcommand{\notationVectorFrame}[3]{{\scriptscriptstyle_#2} \boldsymbol{ \mathrm{#1}}_{\scriptscriptstyle #3}}
+\newcommand{\notationScalarFrame}[3]{{\scriptscriptstyle_#2}{#1}_{\scriptscriptstyle #3}}
+\newcommand{\notationHomogFrame}[3]{{\scriptscriptstyle_#2}\boldsymbol{{#1}}_{\scriptscriptstyle #3}}
+
+% robustify enables to use the previous definitions within captions and stuff
+\robustify{\notatFrame}
+\robustify{\notatMatrix}
+\robustify{\notatVector}
+\robustify{\notatScalar}
+\robustify{\notatHomog}
+\robustify{\notationMatrix}
+\robustify{\notationVector}
+\robustify{\notationScalar}
+\robustify{\notationHomog}
+\robustify{\notationMatrixFrame}
+\robustify{\notationVectorFrame}
+\robustify{\notationScalarFrame}
+\robustify{\notationHomogFrame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lie Groups
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Lie Groups
+\newcommand{\hatop}[1]{#1^{\wedge}}
+\newcommand{\veeop}[1]{#1^{\vee}}
+
+\newcommand{\liebracket}[2]{\left[ #1, #2\right]}
+
+% GL(n)
+\newcommand{\GLN}{\mathrm{GL(N)}}
+
+% SO(2)
+\newcommand{\sotwo}{\mathfrak{so}(2)}
+\newcommand{\SOtwo}{\mathrm{SO(2)}}
+
+% SO(3)
+\newcommand{\sothree}{\mathfrak{so}(3)}
+\newcommand{\SOthree}{\mathrm{SO(3)}}
+
+% SO(N)
+\newcommand{\soN}{\mathfrak{so}(N)}
+\newcommand{\SON}{\mathrm{SO(N)}}
+
+% SE(2)
+\newcommand{\setwo}{\mathfrak{se}(2)}
+\newcommand{\SEtwo}{\mathrm{SE(2)}}
+
+% SE(3)
+\newcommand{\sethree}{\mathfrak{se}(3)}
+\newcommand{\SEthree}{\mathrm{SE(3)}}
+
+% SE(N)
+\newcommand{\seN}{\mathfrak{se}(N)}
+\newcommand{\SEN}{\mathrm{SE(N)}}
+
+% Sim(3)
+\newcommand{\simthree}{\mathfrak{sim}(3)}
+\newcommand{\Simthree}{\mathrm{Sim(3)}}
+
+% Generic exponential and logarithm map (using the capitalized version of Forster et al. (2015))
+\newcommand{\Expmap}[1]{\mathrm{Exp}\left(#1\right)}
+\newcommand{\expmap}[1]{\mathrm{exp}\left(#1\right)}
+\newcommand{\Logmap}[1]{\mathrm{Log}\left(#1\right)}
+\newcommand{\logmap}[1]{\mathrm{log}\left(#1\right)}
+
+% SO(3) exponential and logarithm maps
+\newcommand{\ExpmapSOthree}[1]{\mathrm{Exp}_{\SOthree}\left(#1\right)}
+\newcommand{\expmapSOthree}[1]{\mathrm{exp}_{\SOthree}\left(#1\right)}
+\newcommand{\LogmapSOthree}[1]{\mathrm{Log}_{\SOthree}\left(#1\right)}
+\newcommand{\logmapSOthree}[1]{\mathrm{log}_{\SOthree}\left(#1\right)}
+
+% SE(3) exponential and logarithm maps
+\newcommand{\ExpmapSEthree}[1]{\mathrm{Exp}_{\SEthree}\left(#1\right)}
+\newcommand{\expmapSEthree}[1]{\mathrm{exp}_{\SEthree}\left(#1\right)}
+\newcommand{\LogmapSEthree}[1]{\mathrm{Log}_{\SEthree}\left(#1\right)}
+\newcommand{\logmapSEthree}[1]{\mathrm{log}_{\SEthree}\left(#1\right)}
+
+% Generic adjoint
+\newcommand{\adjop}[1]{\mathrm{ad}\left(#1\right)}
+\newcommand{\Adjop}[1]{\mathrm{Ad}\left(#1\right)}
+
+% Generic Right and Left jacobian
+\newcommand{\JacR}[1]{\mathit{J}_{r} \left( #1 \right)}
+\newcommand{\JacInvR}[1]{\mathit{J}_{r}^{-1} \left( #1 \right)}
+\newcommand{\JacL}[1]{\mathit{J}_{l} \left( #1 \right) }
+\newcommand{\JacInvL}[1]{\mathit{J}_{l}^{-1} \left( #1 \right)}
+
+% Barfoot's operators (Barfoot & Furgale, 2014)
+\newcommand{\barfootOpA}[1]{\langle\!\langle #1 \rangle\!\rangle}
+\newcommand{\barfootOpAB}[2]{\langle\!\langle #1, #2 \rangle\!\rangle}
+
+\newcommand{\adjhat}[1]{{#1}^{\curlywedge}}
+\newcommand{\adjvee}[1]{{#1}^{\curlyvee}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other stuff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% image intensity norm
+\newcommand{\imageIntensity}[2]{I_{#1} \left( #2 \right)}
+
+\newcommand{\getZ}[1]{\boldsymbol{\mathsf{Z}}\left(#1\right)}
+
+% matrix spacing adjustments
+% usage: 
+% \begin{pmatrix}[1.5]
+% ...
+% \end{pmatrix}
+
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+	\edef\arraystretch{#1}%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{*\c@MaxMatrixCols c}}
+\makeatother
+
+% table stuff
+\newcommand{\cell}[1]{\begin{tabular}{@{}l@{}}#1\end{tabular}}
+
+% colors
+\usepackage{color}
+\usepackage{colortbl}
+\definecolor{ColorLightCyan}{rgb}{0.88,1,1}
+\definecolor{ColorLightTurquoise}{rgb}{0.5, 1, 0.8}
+
+
+% Enumerated list with custom labels
+% From David Wisth's
+\newcommand{\beni}{\begin{enumerate}[label=\textbf{Topic \Roman*:}, 
+leftmargin=2cm]} % begin enumerate level I
+\newcommand{\benii}{\begin{enumerate}[label=\Alph*]} % begin enumerate level II 
+%%% [label=\Roman{enumi}.\Alph*]
+
+\newcommand{\hide}[1]{}
+\newcommand{\Figure}{Fig.~}
+\newcommand{\Equation}{Eq.~}
+\newcommand{\ie}{{i.e.,~}}
+\newcommand{\eg}{{e.g.,~}}
+\newcommand{\cf}{\emph{cf.~}}
+\newcommand{\bdmath}{\begin{dmath}}
+\newcommand{\edmath}{\end{dmath}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bdm}{\begin{displaymath}}
+\newcommand{\edm}{\end{displaymath}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\beal}{\beq \begin{array}{ll}}
+\newcommand{\eeal}{\end{array} \eeq}
+\newcommand{\beas}{\begin{eqnarray*}}
+\newcommand{\eeas}{\end{eqnarray*}}
+\newcommand{\ba}{\begin{array}}
+\newcommand{\ea}{\end{array}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+\newcommand{\ben}{\begin{enumerate}}
+\newcommand{\een}{\end{enumerate}}
+% Custom paper-only definitions
+\newcommand{\R}[1]{\mathbb{R}^{#1}}
+\newcommand{\M}{\mathtt{M}}
+\newcommand{\B}{\mathtt{B}}
+\newcommand{\Odo}{\mathtt{O}}
