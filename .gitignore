@@ -6,3 +6,11 @@
 02_confirmation_of_status/
 *main.pdf
 *.gz
+*.blg
+*.fls
+*.fdb_latexmk
+*.maf
+*.mtc*
+*.out
+*.toc
+*.bbl
