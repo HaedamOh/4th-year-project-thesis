@@ -9,8 +9,12 @@
 
 
 % Paragraph 1: Overall Introduction
-Various LiDAR-based place recognition approaches exist, including handcrafted models that extract geometric features and summary statistics \cite{kim2018iros, yuan2023icra}, and learning-based approaches that employ Convolutional Neural Networks (CNNs) and Transformers to compute high-level descriptors capable of distinguishing between different places \cite{vidanapathirana2022icra, komorowski2022ral}.
-In particular we are interested in methods which can produce an estimate of relative 6-DoF transform between the matches, as this is essential for integrating loop-closures within a SLAM system.   
+In this section, we first review different LiDAR-based place recognition methods. Specifically, we consider place recognition using a single LiDAR scan (\emph{single-shot localization}) scenario.
+There are several models designed for: \emph{Global Place Recognition Only} (only retrive most similar place based on descriptors), or \emph{Place Recogntion with Local Pose Estimation} (two stages process using both local features to estimate relative transformation and global features to retrive the most simillar place). In particular, we only focus on the latter methods, as relative 6-DoF transform between the matches is essential for integrating loop-closures within a SLAM system.  
+
+
+Various LiDAR-based place recognition approaches exist on extracting descriptors: handcrafted models that extract geometric features and summary statistics \cite{kim2018iros, yuan2023icra}, and learning-based approaches that employ Convolutional Neural Networks (CNNs) and Transformers to compute high-level descriptors capable of distinguishing between different places \cite{vidanapathirana2022icra, komorowski2022ral}. Also, there are methods only consider global place recognition (retrive the most simillar place) and local pose estimation.
+ 
 % \mfallon{also your framing is too narrow - you are talking about systems creating whole scan descriptors. Other methods work by matching segments/clusters.}
 % \mfallon{SegMatch is a well cited handcrafted approach. And our own work called NSM (Georgi Tinchev) adapted it to natural environments.}
 % \mfallon{SegMap and Georgi's follow up paper extended this approach to use learned descriptors.}
@@ -18,7 +22,8 @@ In particular we are interested in methods which can produce an estimate of rela
 % \haedam{Okay, I try to give an overview. Nived: Can you please check this ?}
 
 % Paragraph 2: Place recognition models, hand crafted 
-% ScanContext, Varients, STD 
+% ScanContext, Varients, STD
+% \section{Handcrafted Descriptors} 
 Among handcrafted approaches, ScanContext\cite{kim2018iros,kim2021tro} stands out as a widely adopted technique that generates a descriptor by encoding the point cloud as a bird’s-eye view representation. It captures height information within defined sectors and integrates them into a 2D descriptor. 
 %The matching of these descriptors enables the estimation of translational and rotational differences between two corresponding point clouds.
 ScanContext has also been enhanced by incorporating additional information such as intensity~\cite{wang2020icra} and semantics~\cite{li2021iros} to create more informative descriptors. 
@@ -28,7 +33,8 @@ Another type of handcrafted descriptor, STD~\cite{yuan2023icra}, encodes boundar
 % \mfallon{BTW, the key feature of STD is that it works without needing a 360 scan. For example it works with a Livox Aria 90 degreee lidar.} 
 % \haedam{rephrase the order of paragraph. Nived can you check this ?}
 
-% Paragraph 3: Place recognition models, learning based
+% Paragraph 3: Place recognition models, learning based 
+% \section{Learning-based Descriptors}
 Recent learning-based models, such as Logg3dNet~\cite{vidanapathirana2022icra}, MinkLoc3D~\cite{komorowski2021wacv}, and EgoNN~\cite{komorowski2022ral} employ discretized representations and contrastive learning schemes to compute point-based local descriptors. This process is followed by generating a global descriptor of aggregated local features using methods like GeM~\cite{radenovic2019pami}, P2O~\cite{vidanapathirana2021icra}, and NetVLAD~\cite{arandjelovic2018pami}.  
 % Add P2O high order pooling 
 For instance, Logg3dNet~\cite{vidanapathirana2022icra} uses a sparse convolutional network with both local consistency and global scene losses learned in a contrastive manner. Similarly, EgoNN~\cite{komorowski2022ral} employs a deep CNN architecture to extract local descriptors and key points through regression, subsequently aggregating them using GeM to form a global descriptor.

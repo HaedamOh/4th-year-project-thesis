@@ -1,8 +1,8 @@
 \chapter{Methods}
 \label{ch:methods}
 
-\section{Method}
-\label{sec:main}
+\section{Overview}
+\label{sec:overview}
 Our objective is to evaluate the capacity of existing LiDAR place recognition models to successfully produce robust loop closure candidates within dense forest environments. Our evaluation considers three distinct tasks: 
 \begin{itemize}
   \listparindent=-20pt
@@ -39,13 +39,13 @@ In the following sections, we present the technical details of the place recogni
 
 % Overall Pipeline
 % This star removes this subsection from the A,B,C list. Such that the task A,B,C match
-\subsection*{Place Recognition \& Verification Server} \label{sec:pipeline}\haedam{reference to method figure which step is which}
+\section{Place Recognition \& Verification Server} \label{sec:pipeline}\haedam{reference to method figure which step is which}
 Our place recognition pipeline consists of three steps: loop candidate proposal, coarse registration, and a final fine-registration. At each step, we perform appropriate checks to filter out incorrect loop closures.
 
 The main inputs are the pose graph, with corresponding LiDAR scans attached to each pose, as well as the single query scan. The query scan is provided by different sources depending on the task we are solving. For example, in the relocalization task it will be a live scan directly from the LiDAR sensor. Further details are provided in the corresponding sections.
 
 % 1.1 Descriptors (Descriptor distance,)
-\subsubsection{\textbf{Step 1: Loop candidate proposals}}
+\subsection*{\textbf{Step 1: Loop candidate proposals}}
 \label{subsubsec:loop-candidate}
 Initial loop closure candidates are obtained by comparing global descriptors extracted from the pose graph scans as well as the query scan. In this paper, we evaluate four state-of-the-art methods for descriptor extraction: the learning-based Logg3dNet~\cite{vidanapathirana2022icra} and EgoNN~\cite{komorowski2022ral}, as well as the handcrafted ScanContext~\cite{kim2018iros} and STD~\cite{yuan2023icra}.
 
@@ -61,7 +61,7 @@ The vector of descriptor distances $\mathbf{S}$ is sorted by increasing distance
 If a spatial prior is available, for example from LiDAR-inertial odometry, we also perform an additional spatial check discarding all the candidates that are more than \SI{20}{\meter} away from the query scan. The output is a set of candidate nodes $\{ n_c\}$.
 
 % 2.1 Pose Estimation (RANSAC) ... notation is a bit confusing.
-\subsubsection{\textbf{Step 2: Coarse Registration}}
+\subsection*{\textbf{Step 2: Coarse Registration}}
 \label{subsubsec:coarse-registration}
 Next, we estimate the relative 6DoF transformation that expresses the pose associated to the query scan w.r.t each candidate node, which we denote $\Delta \mathbf{T}$. For the handcrafted methods (ScanContext and STD), the relative transformation is directly an output of descriptor computation. For the learning-based approaches, we use the point-wise feature vectors outputted in the forward pass of Logg3dNet and EgoNN for point matching, which is used in a RANSAC-based pose estimation scheme~\cite{fischler1981ransac} to obtain the estimated relative transformation.
 
@@ -86,7 +86,7 @@ The interpretation of these transformations change if we discussing online SLAM 
 \end{figure}
 
 % 3. ICP 
-\subsubsection{\textbf{Step 3: Fine Registration}}
+\subsection*{\textbf{Step 3: Fine Registration}}
 \label{subsubsec:fine-registration}
 Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp} for fine registration of the proposed candidates. We use the \emph{libpointmatcher} implementation~\cite{pomerleau2013iros}, which also provides information on the quality of the registration, such as the proportion inlier points and the Residual Error of each point to access the alignment.
 % \mfallon{LibPM returns the residual error of each point. My code uses a threshold (20cm) to determine if a point is an inlier. This magic number is really undertuned}
@@ -96,7 +96,7 @@ Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp
 % since the number of points is fixed (20k I think), the number is really a proportion
 We use the proportion of inliers and the residual error of \SI{20}{\centi\meter} as a final verification step to reject loop candidates. The verified candidates are then used for SLAM or relocalization tasks, which are detailed in the following sections.
 
-\subsection*{Task A: Online Single-mission SLAM} 
+\section{Task A: Online Single-mission SLAM} 
 \label{sec:online_slam_mode}
 \begin{figure}[t]
   \centering
@@ -114,7 +114,7 @@ For the cycle consistency verification described in \secref{subsubsec:coarse-reg
   \Delta\mathbf{T}_{i,i+1}\, \Delta\mathbf{T}_{i+1, j}\, \Delta\mathbf{T}_{j, j+1}\, \Delta\mathbf{T}_{i, j+1}^{-1} \approx \mathbf{I}_{4\times4}
 \end{equation}
 \haedam{exp:cycle consistncy works well in this scenario,}
-\subsection*{Task B: Offline Multi-Mission SLAM}\label{sec:offline}
+\section{Task B: Offline Multi-Mission SLAM}\label{sec:offline}
 Offline multi-mission SLAM addresses the challenge of merging multiple pose graph SLAM missions ${\mathcal{M}_{1, \ldots, n}}$, collected over time, with partly overlapping area. 
 The goal is to find inter-mission loop candidates to construct a unified map in a common reference frame. This application is relevant for forestry applications, where it is required to map larger areas by integrating surveys conducted over multiple missions or campaigns.
 
@@ -130,7 +130,7 @@ For the cycle consistency step, we considered pairs of nodes within the same mis
   \Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,l}\, \Delta\mathbf{T}_{k, l}^{-1}\, \Delta\mathbf{T}_{i,k}^{-1}\, \approx \mathbf{I}_{4\times4}
 \end{equation}
 
-\subsection*{Task C: Relocalization} \label{sec:relocalization}
+\section{Task C: Relocalization} \label{sec:relocalization}
 Lastly, we considered the case in which a prior map of the forest was available (from online SLAM). Our place recognition \& verification server could then be used as a relocalization module, by using the loop candidate proposals to produce initial pose estimates, then coarese-to-fine registration achieving real-time localization of the LiDAR sensor base $\B$ with the prior map's coordinate frame $\M$, denoted by $\mathbf{T}_{\M\B}$.
 
 \mfallon{the following paragraph is confusing and poorly written. If we are doing cycle consistency checking we don't have a `successful relocalization' we only have a `possible candidate'}
