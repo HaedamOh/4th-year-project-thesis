@@ -47,16 +47,12 @@ While Transformer variants \cite{zhang2019cvpr, xia2021cvpr, zhou2021icra, xu202
 % \mfallon{please use `relative transformation' not `relative pose'. Pose is a transformation relative to a fixed coordinate frame (e.g. Odom,.}
 % \haedam{Done}
 As an alternative to a whole scan descriptor, some methods utilize segments to capture the important elements, effectively compressing the information in the entire point cloud map into a more compact representation. SegMatch \cite{dube2017icra} by Dubé et al. computes local segments and extracts geometric features as a descriptor. In their follow-up work, SegMap \cite{dube2018rss}, these features were learned via a CNN, showing improved overall performance. Tinchev et al. \cite{tinchev2018iros, tinchev2019ral} have applied the segment-based approach to natural environments, showing promising results. However, these methods are vulnerable when these segments cannot be reliably detected due to occlusions in dense forest environments, as well as long-term changes in the environment.
-%\haedam{Nived Can you check this? "
-% However, those methods are susceptible to occlusions and outliers in dense forest environments and long-term changes in the environment." we did not test this but can I write this sentence here?}
+
 
 % Paragraph 4: Environmental forest data, benchmarking , SLAM system, Wildplace
 Several LiDAR point cloud datasets are available for benchmarking place recognition models in urban scenarios \cite{maddern2017ijrr, behley2019iccv, kim2020icra}. However, there are few datasets  for natural environments \cite{triest2022icra, knights2023icra}. In particular, the Wild-Places dataset \cite{knights2023icra} is tailored to large-scale place recognition in forests. This dataset provides point clouds and ground truth poses collected in a forest national park in Australia using hand-held spinning LiDAR at various times of the year.
 
-In this paper, we assess the performance of four different place recognition models including both handcrafted (ScanContext and STD) and learning-based (Logg3dNet and EgoNN) models on our dense forest datasets \footnote{Our datasets will be published at \url{https://ori.ox.ac.uk/labs/drs/datasets-drs/} using the format as Wild-Places} collected across three different countries using a backpack LiDAR mapping device, in contrast to previous methods that often concentrated on access roads. 
+In this paper, we assess the performance of four different place recognition models including both handcrafted (ScanContext and STD) and learning-based (Logg3dNet and EgoNN) models on our dense forest datasets collected across three different countries using a backpack LiDAR mapping device, in contrast to previous methods that often concentrated on access roads. 
 % These datasets comprise both 32-beam narrow FOV (field-of-view) and 64-beam wide FOV setups . We then integrate these models into our SLAM system and evaluate their performance in identifying robust loop-closure pairs and providing accurate 6-DoF pose estimations within dense forest environments.  Our study focuses on loop-closure capability within dense forest areas, in contrast to previous methods that often concentrated on access roads. 
 
-% \mfallon{why does the previous paragraph exist? It's not related work - its about the method. Can you shorten it significantly. Perhaps its sufficient to just include the first sentance and move the part about our dataset to the results section.}
-% \haedam{Okay}
-% \mfallon{Of course we should publish the datasets with the paper.}
-% \haedam{So should I say we will upload dataset here ..? }
+
