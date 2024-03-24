@@ -83,16 +83,6 @@ In this experiment, we investigate the online place recognition capability of ou
 % Interpret results exp_2_1
 \figref{fig:exp_2_1_online_place_recognition} presents an illustrative example of online SLAM performance on the Evo dataset, depicting the sets of loop candidates after each verification step. Initially, many loop closure candidates are proposed (shown in blue) under a descriptor matching threshold $\tau_{s}$ of $F_1$-max score. Loop closures beyond a conservative estimate of \SI{20}{\meter} are rejected using the odometry information. After this, a subset of loop closure candidates are identified using RANSAC matching (highlighted in orange), and finally, a refined set of loop closures that pass the consistency and ICP steps are integrated into the SLAM framework. Final loop closures (shown in red) are one of ICP verified loop candidates by checking pose graph density to avoid over-constraining the pose graph.
 
-\subsection{Loop Closure Statistics}
-% Present results in exp2_2
-Next, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs across considerable baseline distances (\SIrange{10}{20}{\meter}). We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making convergence of ICP challenging.
-
-Similarly, in terms of viewpoint orientation difference, we observed that a large proportion of the loop candidates up to \SI{90}{\degree} difference are verified both at the RANSAC-registration and ICP-based checks. However, we observed a degradation of performance over \SI{90}{\degree}, which can be attributed to the occlusions in the scans present at large orientation differences. Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
-
-% \mfallon{this is worrying and not explained. It's pretty problematic. We should discuss -THIS IS IMPORTANT. There should be no justification for this but we had this problem with Georgi Tinchev's work also. Furthermore, why doesnt it work with the angle is 180d and also 0d. That's quite bad.}
-%\haedam{From Initial candidates to Ransac registration there is significant drop across 90-180 ( we can't say it is viewpoint invarient) , but from RANSAC-ICP the proportion is constant. How to explicitly say this ?}
-
-%%% Make this separate figure 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.99\columnwidth]{pics/exp_2_1_online_place_recognition}
@@ -107,8 +97,26 @@ Similarly, in terms of viewpoint orientation difference, we observed that a larg
    Initial candidates based on descriptor distance are shown in blue. Candidates beyond \SI{20}{\meter} are rejected using odometry information. Candidates within \SI{20}{\meter} undergo RANSAC pre-registration with additional verification steps of SGV\cite{vidanapathirana2023ral} and pairwise checks (Yellow). Then these candidates are refined using ICP fine-registration (Red), and final loop closures in the pose graph after checking constraints density in pose graph (red with black outlined).}
   \label{fig:exp_2_2_loop_closure_histograms}
 \end{figure}
+\subsection{Loop Closure Statistics}
+% Present results in exp2_2
+Next, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs across considerable baseline distances (\SIrange{10}{20}{\meter}). We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making convergence of ICP challenging.
+
+Similarly, in terms of viewpoint orientation difference, we observed that a large proportion of the loop candidates up to \SI{90}{\degree} difference are verified both at the RANSAC-registration and ICP-based checks. However, we observed a degradation of performance over \SI{90}{\degree}, which can be attributed to the occlusions in the scans present at large orientation differences. Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
 
 
+
+
+\subsection{ScanContext vs Logg3dNet} 
+It was evident ScanContext shows a drop in performance in \ref{sec:exp_desc_analysis}. Here, we further compared ScanContext and Logg3dNet capability integrated to SLAM system. First, ScanContext produced many false positivies candidates (shown in Blue lines) inside the dense forest.   
+
+
+\begin{figure}[t]
+  \centering
+  \subfloat[Logg3dNet loop closures]{\includegraphics[width=0.5\columnwidth]{pics/exp_2_logg3dnet_loop_closure.png}\label{subfig:logg3dnet_loop_closure}}
+  \subfloat[ScanContext loop closures]{\includegraphics[width=0.5\columnwidth]{pics/exp_2_sc_loop_closure.png}\label{subfig:scancontext_loop_closure}}
+  \caption{Loop Closures overview of ScanContext VS Logg3dNet on Evo dataset. ScanContext could not detect any loop closures inside the dense forest but only in open access roads. }
+  \label{fig:exp_2_3_loop_closure_comparison}
+\end{figure}
 
 % Third experiment: Offline Multi-Mission SLAM
 %%% 
@@ -117,12 +125,9 @@ Similarly, in terms of viewpoint orientation difference, we observed that a larg
   \centering
   \includegraphics[width=0.99\columnwidth]{pics/exp_3_1_multimission_slam_big}
   \caption{Offline multi-mission SLAM. Left: Wytham - a densely wooded area with uneven terrain, including hills. Center: Evo - featuring a LiDAR setup on an incline, with loop closures occurring primarily when viewpoints are closely aligned. Right: Forest of Dean - flatter terrain compared to Wytham, with a sparser plantation, allowing for loop closures to be captured at greater distances. 
-  %\mfallon{please replace yellow - very difficult to see. High importance}
-  %\mfallon{blue and purple are difficult to distinguish. Low importance}
 }
   \label{fig:exp_multi_mission}
 \end{figure*}
-\mfallon{I'm interested in the last comment about greater distances. How much?}
 
 \section{Offline Multi-Mission SLAM} 
 \label{sec:offline_multi_mis  sion}
@@ -173,7 +178,7 @@ Overall, our experiments showed potential for efficient large-scale mapping, as 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.99\linewidth]{pics/relocalization_demo.png}
+  \includegraphics[width=0.99\linewidth]{pics/exp_4_relocalization_demo.png}
   \caption{Demonstration of relocalization capability. LiDAR (illustrated by large marker) is relocalized in a prior map. We render a virtual view of the forest digital map synchronized with images from our camera (right). Red arrow shows a successful localization at that pose.
   }
   \label{fig:relocalization}
