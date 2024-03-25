@@ -67,11 +67,10 @@ Next, we estimate the relative 6DoF transformation that expresses the pose assoc
 We additionally verify the inlier matches using the \emph{Spectral Geometric Verification}~\cite{vidanapathirana2023ral} method, which provides an additional measure of the quality of the feature matches. In short, SGV computes pairwise cycle consistency of local feature correspondances. Given the correspondances of local features between two point clouds, $\{c_1, c_2 \ldots c_n\}$ we can construct a graph $M \in \R{n \times n}$ where $M_{i,j}$ is similarity score between $c_i$ and $c_j$. The intuition is if both $c_i$ and $c_j$ are inliers they are pairwise consistent in their coordinate frames, but if one of correspondances is an outlier they are not consistent. 
 
 In \figref{fig:cycle-consistency} shows the idea of pairwise cycle consistency. Consider two correspondances $\{c_1, c_2\}$, there are keypoints $\{kp_1, kp_2\}$ in query point clouds and corresponding keypoints $\{kp'_1, kp'_2\}$ in loop candidate point clouds ($kp \in \R{3}$). Following the \figref{fig:cycle-consistency} notations, two correspondances $\{c_1, c_2\}$ represented as two edges $\Delta\mathbf{T}_{l,i}$ and $\Delta\mathbf{T}_{j,k}$ and nodes $\{n_i, n_j, n_k, n_l\}$ represent keypoints  $\{kp_1, kp_2, kp'_2, kp'_1\}$.
-Similarity score:
+Similarity score between 1 and 0:
 \begin{equation}
   M_{i,j} = ||\Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i}\, ||
 \end{equation}
-
 We then compute the total SGV score $s$:
 \begin{equation}
   s = \sum_{i,j} M_{i,j} 
@@ -83,31 +82,33 @@ By finding maximum inliers $v^{*}$, we can find the maximum SGV score $s^{*}$:
 \end{equation}
 where $v$ is the eigenvector of the largest eigenvalue of $M$. The SGV score $s$ is then used to verify the quality of the feature matches.
 
-The author of Logg3dNet proposed SGV check for reranking top-$k$ candidates obtained from descriptor distance matching in \secref{subsubsec:loop-candidate}. But, instead we used SGV for verifying registration quality when their baseline distance is far apart. 
+The author of Logg3dNet proposed SGV check for reranking top-$k$ candidates obtained from descriptor distance matching in \secref{subsubsec:loop-candidate}. But, instead we used SGV for verifying registration quality against baseline distance. \figref{fig:sgv_distance} shows the SGV score computed against the distance between two point clouds. We used SGV score as an indication of baseline distance of loop candidates. For example, we set $SGV_{score}=0.1$ as a threshold for \SI{10}{\meter} baseline distance, and reject the loop candidates if SGV score is smaller than 0.1.
 
 \begin{figure}[t]
   \centering
   \includegraphics*[width=0.8\columnwidth]{pics/methods_svg_distance.png}
-  \caption{SGV score computed against distance between two point clouds. The SGV score is computed for each pair of point clouds, and the distance between them is computed. The SGV score is higher when the distance is smaller, indicating that the feature matches are more reliable when the point clouds are closer.}
+  \caption{SGV scores computed against baseline distances and angles of loop closures obtained. The SGV score becomes smaller when the baseline distance becomes larger, indicating that smaller proportion of correct correspondances are found. $SGV_{score}=0.1$ approximately indicates \SI{10}{\meter} baseline distance, and $SGV_{score}=0.05$ upto \SI{20}{\meter}. Also, we observed that SGV score is constant over different angles indicating registration is consistent across different viewpoints (viewpoint invariant).}
   \label{fig:sgv_distance}
 \end{figure}
 
 
 \subsubsection*{\textbf{Pairwise Loop Closures Cycle Consistency Check}}
-Lastly, we carry out a \emph{cycle consistency} verification (\figref{fig:cycle-consistency}), which checks whether the relative transformations between pairs of nodes are mutually consistent with one another. Given four pose graph nodes $n_i, n_j, n_k, n_l$, we test how close the following equivalence holds:
+Lastly, we carry out a \emph{loop closure cycle consistency} verification (\figref{fig:cycle-consistency}), which checks whether the relative transformations between pairs of nodes in posegraph are mutually consistent with one another. Given four pose graph nodes $n_i, n_j, n_k, n_l$, we test how close the following equivalence holds:
 \begin{equation}
 \Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i}\, \approx \mathbf{I}_{4\times4} 
 \end{equation}
-If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\degree} we reject the candidate. This is shown in \figref{fig:cycle-consistency}, the interpretation of these transformations change depending on operation modes: online SLAM (\secref{sec:online_slam_mode}), offline multi-mission SLAM (\secref{sec:offline}), or pure relocalization (\secref{sec:relocalization}). However, the main idea remains the same: to verify if two successive loop candidates are consistent across different frames.
+If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\degree} we reject the candidate. This is shown in \figref{fig:cycle-consistency}, the interpretation of these transformations change depending on operation modes: online SLAM (\secref{sec:online_slam_mode}), offline multi-mission SLAM (\secref{sec:offline}), or pure relocalization (\secref{sec:relocalization}). However, the main idea remains the same: to verify if two successive loop candidates are consistent across different frames (Alg.\ref{alg:pairwise_cycle_check} shows pseudocodes of pairwise cycle consistency check when implemented).
 \begin{figure}[t]
   \centering
   \includegraphics*[width=0.8\columnwidth]{pics/methods_pairwise_consistency.pdf}
-  \caption{Our proposed cycle consistency check is general and applies to the online and offline multi-mission SLAM case, as well as relocalization tasks. We only need the relative transformation estimates and loop candidates between four nodes $n_i, n_j, n_k, n_l$ to verify the validity of a loop. Please refer to \secref{subsubsec:coarse-registration} for technical details.}
+  \caption{Our proposed pairwise cycle consistency check is general and applies to the online and offline multi-mission SLAM case, as well as relocalization tasks. We only need the relative transformation estimates and loop candidates between four nodes $n_i, n_j, n_k, n_l$ to verify the validity of a loop. Please refer to \secref{subsubsec:coarse-registration} for technical details.}
   \label{fig:cycle-consistency}
 \end{figure}
 
 \begin{algorithm}
-  \caption{Pairwise Cycle Check between two consecutive loop closures: $\Delta\mathbf{T}_{t-1}$, $\Delta\mathbf{T}_{t}$ }
+  \caption{Pairwise Cycle Check between two consecutive loop closures: $\Delta\mathbf{T}_{t-1}$, $\Delta\mathbf{T}_{t}$ }    
+  \label{alg:pairwise_cycle_check}
+
   \begin{algorithmic}[1]
    
     % \State \textbf{Inputs:} $\Delta\mathbf{T}_{t-1}, \Delta\mathbf{T}_{t}$
@@ -156,16 +157,11 @@ If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\
   \end{algorithmic}
 \end{algorithm}
 
-  
-
-
-
-
 
 % 3. ICP 
 \subsection*{\textbf{Step 3: Fine Registration}}
 \label{subsubsec:fine-registration}
-Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp} for fine registration of the proposed candidates. We use the \emph{libpointmatcher} implementation~\cite{pomerleau2013iros}, which also provides information on the quality of the registration, such as the proportion inlier points and the Residual Error of each point to access the alignment.
+Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp} for fine registration of the proposed candidates given prior registration from RANSAC. We use the \emph{libpointmatcher} implementation~\cite{pomerleau2013iros}, which also provides information on the quality of the registration, such as the proportion inlier points and the Residual Error of each point to access the alignment.
 % \mfallon{LibPM returns the residual error of each point. My code uses a threshold (20cm) to determine if a point is an inlier. This magic number is really undertuned}
 % this magic number of 20cm is very very important:
 % https://github.com/ori-drs/vilens/blob/develop/icp_odometry/icp_odometry/src/icp_odometry/registration_verification.cpp#L28
@@ -177,7 +173,7 @@ We use the proportion of inliers and the residual error of \SI{20}{\centi\meter}
 \label{sec:online_slam_mode}
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.85\columnwidth]{pics/methods_factor_graph_v2}
+  \includegraphics[width=0.80\columnwidth]{pics/methods_factor_graph_v2}
   \caption{Pose graph formulation used for (a) online, and (b) offline multi-mission SLAM optimization. Each node $n_{i}$ has a 6DOF pose $\mathbf{x}_{i}$, which correspond to the main variables estimated on each case.}
   \label{fig:factor_graph}
 \end{figure}
@@ -191,7 +187,6 @@ For the cycle consistency verification described in \secref{subsubsec:coarse-reg
 \end{equation}
 % \haedam{exp:cycle consistncy works well in this scenario,}
 
-\subsubsection*{Implementation Details}
 
 \section{Task B: Offline Multi-Mission SLAM}\label{sec:offline}
 Offline multi-mission SLAM addresses the challenge of merging multiple pose graph SLAM missions ${\mathcal{M}_{1, \ldots, n}}$, collected over time, with partly overlapping area. 
@@ -226,3 +221,15 @@ This check is used to verify the relocalization estimate, and if successful, ICP
 
 
 This relocalization capability could facilitate various applications, such a enabling a harvester robot to operate autonomously within a prior map or enabling foresters to visualize a rendering of the virtual forest along with important information on a screen in real-time. An example demonstrating the latter is presented in \secref{sec:exp_relocalization}, where a prior map of the forest is generated using a backpack-based LiDAR mapping system, and a legged robot continuously relocalizes itself within that prior map as part of a teleoperated inspection task.
+
+
+
+
+
+
+
+
+
+
+
+
