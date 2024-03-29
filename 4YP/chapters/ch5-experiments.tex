@@ -8,7 +8,7 @@ In this section, we rigorously evaluate our place recognition pipeline to assess
 The experiments conducted are as follows:
 \begin{enumerate}[label=\Roman*.]
   \item Evaluation of four different place recognition models at the descriptor-level, tested across multiple forest environments with different LiDAR setups. (\secref{sec:exp_desc_analysis}) 
-  \item Performance assessment during both online and offline SLAM operations within dense forest settings. (\secref{sec:exp_online_slam} \& \secref{sec:offline_multi_mission}). \mfallon{somewhere here you need to say you tested only Logg3dNet for some experiments}
+  \item Performance assessment during both online and offline SLAM operations within dense forest settings. (\secref{sec:exp_online_slam} \& \secref{sec:offline_multi_mission}).
   \item Analysis of successful loop closures, based on baseline distance and orientation differences. (\secref{sec:exp_online_slam})
   \item Demonstration of the relocalization application in a previously mapped forest environment, showcasing its utility in an inspection task performed by a quadruped robot. (\secref{sec:exp_relocalization})
 \end{enumerate}
@@ -21,28 +21,29 @@ The experiments conducted are as follows:
 \section{Place Recognition Descriptors}
 \label{sec:exp_desc_analysis} 
 In this experiment, we evaluated the descriptors of four different place recognition models (Logg3dNet, EgoNN, ScanContext, STD) focusing on their ability to accurately capture loop-candidates in forest environments. Logg3dNet and EgoNN models are learning-based methods and were pre-trained on the Wild-Places dataset. 
-\subsection{Datasets and setups}
+\subsection{Datasets}
 We used two different LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai QT64. The XT32 is a long-range, narrow field of view, 32-beams LiDAR, and QT64 is a short-range, wide field of view LiDAR. Note that Wild-Place\cite{knights2023icra} dataset was collected using a inclined VLP-16 LiDAR mounted on spinning motor. This enabled capturing the canopy of the forest, which is difficult for our backpack LiDAR setup. The specifications of the LiDAR sensors used in the experiments are summarized in \tabref{tab:lidar_specs}.
 \begin{table}[ht]
   \centering
-  \caption{LiDAR Specifications for Mapping}
+  \caption{LiDAR Specifications for Datasets.}
   \label{tab:lidar_specs}
-  \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}l|c|c|c|}
+  \begin{tabular}{|p{2.5cm}|p{2cm}|p{2.3cm}|p{2.3cm}|c|}
     \hline
-    \multicolumn{1}{|c|}{\textbf{Location}} & \multicolumn{1}{c|}{\textbf{LiDAR}} & \multicolumn{1}{c|}{\textbf{Field of View (\textdegree)}} & \multicolumn{1}{c|}{\textbf{Range (m)}} & \multicolumn{1}{c|}{\textbf{Tree Density}} \\
+    \centering \textbf{Location} & \centering  \textbf{LiDAR} & \centering  \textbf{Field of View (\textdegree)} &\centering  \textbf{Effective Range (m)} & \textbf{Tree Density} \\
     \hline
-    Wild-Place & VLP-16 & 30 (inclined) & 50 & Low-Medium \\
+    \centering Wild-Place & \centering VLP-16 & \centering 30  & \centering 50 & Low \\
     \hline
-    Evo &  XT32 & 30 & 50 & Medium \\
+    \centering Evo &  \centering XT32 &\centering 30 &\centering 50 & Medium \\
     \hline
-    Stein am Rhein &  XT32 & 30 & 50 & Low \\
+    \centering Stein am Rhein &\centering  XT32 & \centering 30 & \centering 50 & Low \\
     \hline
-    Wytham Woods &  QT64 & 100 & 30 & High \\
+    \centering Wytham Woods &\centering  QT64 &\centering 100 &\centering 30 & High \\
     \hline
-    Forest of Deans & QT64 & 100 & 30 & Low \\
+    \centering Forest of Deans &\centering QT64 &\centering 100 &\centering 30 & Low \\
     \hline
   \end{tabular}
 \end{table}
+
 
 \subsection{Precision-Recall Curves}
 Precision-recall curves (See \figref{fig:pr_curves}) show how accurately (precision) and frequently (recall) each  model detects correct loop candidates within a reasonable distance threshold (here set to 10\,m) at various descriptor thresholds $\tau_{s}$ in four different forests. Among positive candidates   (whose descriptor distance < $\tau_{s}$ ), we classify them into true positive(\emph{TP}) and false positive(\emph{FP}) depending on whether the candidate is actually located within the loop-closure distance threshold, 10 meter. 
@@ -68,11 +69,20 @@ To further analyze the distinctiveness of each descriptor, we measured the descr
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.99\linewidth]{pics/exp_1.2_heatmap_evo12_plasma_edit}
+  \includegraphics[width=0.90\linewidth]{pics/exp_1.2_heatmap_evo12_plasma_edit}
   \caption{Heatmaps depicting descriptor distances for the Evo dataset. Yellow hues denote a high descriptor similarity between scans, whereas purple indicates the low similarity. Patterns more closely resembling the ground-truth (top-left) indicate better descriptor performance. Logg3dNet descriptors shows the most similar patterns, whereas ScanContext descriptors are least discriminative among these models. We use $\tau_{s}$ that corresponds to the $F_1$-max score in evaluation.}
   \label{fig:heatmap_evo12}
 \end{figure}
 
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{pics/exp_2_1_evo16_online.png}
+  \includegraphics[width=0.8\columnwidth]{pics/exp_2_1_evo12_online.png}
+  \caption{Online SLAM results on Evo datasets. Initial candidates (Blue) proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph.}
+  \label{fig:exp_2_1_online_place_recognition}
+\end{figure}
 
 
 %%% Second experiment: Online SLAM
@@ -83,16 +93,11 @@ In this experiment, we investigate the online place recognition capability of ou
 % Interpret results exp_2_1
 \figref{fig:exp_2_1_online_place_recognition} presents an illustrative example of online SLAM performance on the Evo dataset, depicting the sets of loop candidates after each verification step. Initially, many loop closure candidates are proposed (shown in blue) under a descriptor matching threshold $\tau_{s}$ of $F_1$-max score. Loop closures beyond a conservative estimate of \SI{20}{\meter} are rejected using the odometry information. After this, a subset of loop closure candidates are identified using RANSAC matching (highlighted in orange), and finally, a refined set of loop closures that pass the consistency and ICP steps are integrated into the SLAM framework. Final loop closures (shown in red) are one of ICP verified loop candidates by checking pose graph density to avoid over-constraining the pose graph.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.99\columnwidth]{pics/exp_2_1_online_place_recognition}
-  \caption{Online place recognition on a sequence of the Evo dataset. The sequence covers about 25 minutes of walk with the backpack mapping system (Hesai-XT32). Bold red lines show the loop closures integrated into the SLAM system, successfully identified up to distance of \SI{17}{\meter} within dense forest areas.}
-  \label{fig:exp_2_1_online_place_recognition}
-\end{figure}
+
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.99\columnwidth]{pics/exp_2_2_loop_closure_histograms}
+  \includegraphics[width=0.8\columnwidth]{pics/exp_2_2_loop_closure_histograms}
   \caption{Loop closures distribution by distance and angle at various stages of the pipeline on Evo dataset.
    Initial candidates based on descriptor distance are shown in blue. Candidates beyond \SI{20}{\meter} are rejected using odometry information. Candidates within \SI{20}{\meter} undergo RANSAC pre-registration with additional verification steps of SGV\cite{vidanapathirana2023ral} and pairwise checks (Yellow). Then these candidates are refined using ICP fine-registration (Red), and final loop closures in the pose graph after checking constraints density in pose graph (red with black outlined).}
   \label{fig:exp_2_2_loop_closure_histograms}
@@ -117,7 +122,6 @@ It was evident ScanContext shows a drop in performance in \ref{sec:exp_desc_anal
   \caption{Loop Closures overview of ScanContext VS Logg3dNet on Evo dataset. ScanContext could not detect any loop closures inside the dense forest but only in open access roads. }
   \label{fig:exp_2_3_loop_closure_comparison}
 \end{figure}
-
 % Third experiment: Offline Multi-Mission SLAM
 %%% 
 
@@ -130,7 +134,7 @@ It was evident ScanContext shows a drop in performance in \ref{sec:exp_desc_anal
 \end{figure*}
 
 \section{Offline Multi-Mission SLAM} 
-\label{sec:offline_multi_mis  sion}
+\label{sec:offline_multi_mission}
 In this experiment, we showcased the ability of our approach to obtain loop closures between different mapping missions and to merge those missions into a common map. In this task, we employed tighter descriptor thresholds ($\tau_{s}$) compared to the online SLAM task, in order to reduce the number of false positive loop candidates.
 Figure \ref{fig:exp_multi_mission} presents the results of merging different sequences within three different datasets: Wytham Woods, Evo, and the Forest of Dean. Each individual mission covers approximately one hectare, with merged map areas ranging from three to five hectares.
 % \mfallon{these details about sensors should have been mentioned before hand. can you introduce the two sensors in the start of the experiments and refer to them ad the Wide FOV and Narrow FOV lidar afterwards.}
