@@ -8,14 +8,14 @@
     \label{fig:motivation}
 \end{figure}
 
-\section{Motivation}
+\subsection*{Motivation}
 Place recognition is an essential capability used to minimize the drift in the pose estimate produce by a Simultaneous Localization and Mapping (SLAM), as well as to re-localize in previously mapped areas. 
 LiDAR-based place recognition systems have demonstrated robustness by effectively capturing scene structure while showing low susceptibility to visual changes, making them suitable for long-term navigation. 
 Previous methods have primarily focused on the problem of autonomous driving in urban environments (characterised by long linear sequences), with their efficacy in natural settings much less tested.
 %\mfallon{Wildplaces dataset is a counter example of this.} 
 Recent ongoing applications in natural environments, including agriculture, environmental monitoring, conservation, and search and rescue, highlight the significance of extending research efforts beyond urban landscapes.
 
-\section{Challenges in natural environments}
+\subsection*{Challenges in natural environments}
 % Why natural environment 
 Despite the advancements of LiDAR-based place recognition in urban areas, its application in unstructured natural environments like forests presents several notable challenges. 
 Firstly, natural environments are irregular structures like trees, which not only lack fine structure but also undergo seasonal changes, affecting their shape and density over time. This complicates the creation of consistent geometric representations crucial for accurate place recognition.
@@ -27,7 +27,7 @@ Lastly, unique, undefined trajectories or paths when exploring dense forests pos
 %%%%%%%%%%%%%%%%%%%
 %% WHICH PROBLEM
 % Second, explain WHICH problem you are solving/address to solve: Compare WildPlace  
-\section{Objectives}
+\subsection*{Objectives}
 Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by hand-held spinning LiDAR, capturing seasonal changes within the forest. The dataset was used to evaluate different stete-of-the-art place recognition models in forest environments focusing on localization tasks along the access roads of a national park. The main outcome of their work was that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, without the strong structural cues that access roads provide roads. Additionally we are also interested in testing the accuracy of precise 6DoF pose estimation for forestry or biodiversity monitoring applications.
 
 
@@ -45,7 +45,7 @@ Recently, the Wild-Places dataset \cite{knights2023icra} has been made available
 %% MAIN CONTRIBUTION & WHAT FOLLOWS FROM THAT
 % Explain your contribution in one paragraph. This is a very important paragraph. 
 % Always start that paragraph with: ``The main contribution of this paper is''
-\section{Contributions}
+\subsection*{Contributions}
 
 In this work, we present an evaluation of place recognition models to dense forest environments. We employ different LiDAR sensors with sequences recorded with backpack-mounted devices or mobile robots, such as legged platforms, to perform a rigorous analysis of existing learning-based and handcrafted LiDAR place recognition systems. Further, we present a LiDAR-based SLAM system to assess the proposed loop-closure pairs and subsequently validate them through fine-registration in both online and offline modes. Finally, we demonstrate the approach being use for a purely relocalization task, wherein the system continuously localizes its position within a prior point cloud map made up of individual LiDAR scans.
 
@@ -65,7 +65,7 @@ In summary, the contributions of this paper are:
 
 \item Demonstration of the best performing method in online/single-session and offline/multi-session SLAM modes, as well as in relocalization tasks for forest inspection in a prior environment map. 
 
-\item Release of our dense forest datasets with ground truth, collected with a backpack-mounted LiDAR across three different countries\footnote{Our datasets will be published at \url{https://ori.ox.ac.uk/labs/drs/datasets-drs/} using the format as Wild-Places}. 
+\item Release of our dense forest datasets with ground truth, collected with a backpack-mounted LiDAR across three different countries\footnote{Our datasets will be published at \url{https://ori.ox.ac.uk/labs/drs/datasets-drs/}} 
 \end{itemize}
 
 
