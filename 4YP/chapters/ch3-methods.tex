@@ -36,7 +36,13 @@ The main inputs are the pose graph, with corresponding LiDAR scans attached to e
 % 1.1 Descriptors (Descriptor distance,)
 \subsection*{\textbf{Step 1: Loop candidate proposals}}
 \label{subsubsec:loop-candidate}
-Initial loop closure candidates are obtained by comparing global descriptors extracted from the pose graph scans as well as the query scan. In this paper, we evaluate four state-of-the-art methods for descriptor extraction: the learning-based Logg3dNet~\cite{vidanapathirana2022icra} and EgoNN~\cite{komorowski2022ral}, as well as the handcrafted ScanContext~\cite{kim2018iros} and STD~\cite{yuan2023icra}.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{pics/methods_fig_descriptor.pdf}
+  \caption{Different types of place recognition descriptors on WildPlace~\cite{knights2023icra} data. ScanContext(Left), STD(Middle), EgoNN and Logg3dNet(Right). ScanContext encodes maximum height at each sector(radius,angle) and compute a 2D descriptor. STD computes corners of planes (trunk of trees) and connect them to multiple triangles. EgoNN and Logg3dNet both compute learning-based pointwise descriptors in voxelized point clouds.  }
+  \label{fig:descriptors_example}
+\end{figure}
+Initial loop closure candidates are obtained by comparing global descriptors extracted from the pose graph scans as well as the query scan. In this paper, we evaluate four state-of-the-art methods for descriptor extraction: the learning-based Logg3dNet~\cite{vidanapathirana2022icra} and EgoNN~\cite{komorowski2022ral}, as well as the handcrafted ScanContext~\cite{kim2018iros} and STD~\cite{yuan2023icra}. \figref{fig:descriptors_example} shows their descriptors examples computed on WildPlace data.  
 
 Given the reference pose graph and the query scan, we compute a database of descriptors using all the scans in the pose graph, given by the matrix $\mathbf{D} \in \R{N\times M}$, where $N$ is the number of poses in the pose graph and $M$ the descriptor dimension. Additionally, we compute the descriptor for the query scan, denoted by $\mathbf{d}_{q} \in \R{M \times 1}$. 
 
@@ -51,19 +57,34 @@ If a spatial prior is available, for example from LiDAR-inertial odometry, we al
 % 2.1 Pose Estimation (RANSAC) ... notation is a bit confusing.
 \subsection*{\textbf{Step 2: Coarse Registration}}
 \label{subsubsec:coarse-registration}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics*[width=\columnwidth]{pics/methods_registration.png}
+  \caption{Registration example of two point clouds \SI{7.3}{\meter} and \SI{111}{\degree} apart. Left image is before registration. Right image shows after RANSAC-registration. The trunks of trees scans are clearly matched each other. }
+  \label{fig:registration_example}
+\end{figure}
 Next, we estimate the relative 6DoF transformation that expresses the pose associated to the query scan w.r.t each candidate node, which we denote $\Delta \mathbf{T}$. For the handcrafted methods (ScanContext and STD), the relative transformation is directly an output of descriptor computation. For the learning-based approaches, we use the point-wise feature vectors outputted in the forward pass of Logg3dNet and EgoNN for feature matching, which is used in a RANSAC-based pose estimation scheme~\cite{fischler1981ransac} to estimate the relative transformation. We used \emph{Open3D} RANSAC implementation~\cite{zhou2018}.  
 
 \subsubsection*{\textbf{RANSAC Registration}}
 \figref{fig:RANSAC_keypoint_matching} shows visualizations of RANSAC feature matchings. We noticed that as the distance between two point clouds increases, there are more incorrect matches(outliers) due to smaller overlap between them. This also suggests that RANSAC only measures if two point clouds can be registered or not, unable to determine if a loop candidate is actually a false positive or a correct loop candidate but with far the baseline distance. Therefore, we introduced two more verification layers, SGV and pairwise cycle consistency check. 
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics*[width=\columnwidth]{pics/methods_keypoint_matching.pdf}
   \caption{RANSAC based keypoint feature matching (from Logg3dNet): Query Point clouds (Red) vs Retrieved Point clouds candidate (Green). Each keypoint has own feature vector and mached against the most simillar feature among features in retrieved point clouds (Black lines). In the left image, where the baseline distance is small (\SI{0.8}{\meter}) and the viewpoint difference is \SI{6}{\degree} , RANSAC matching consistently finds matching pairs along the horizontal axis. However, in the right image, with a longer baseline distance of 7 meters, there are more incorrect matches appearing (shown as vertical lines).   }
   \label{fig:RANSAC_keypoint_matching}
 \end{figure}
 
+
+
 \subsubsection*{\textbf{Spectral Geometric Verification (SGV)}}
+\begin{figure}[t]
+  \centering
+  \includegraphics*[width=0.8\columnwidth]{pics/methods_svg_distance.png}
+  \caption{SGV scores computed against baseline distances and angles of loop closures obtained. The SGV score becomes smaller when the baseline distance becomes larger, indicating that smaller proportion of correct correspondances are found. $SGV_{score}=0.1$ approximately indicates \SI{10}{\meter} baseline distance, and $SGV_{score}=0.05$ upto \SI{20}{\meter}. Also, we observed that SGV score is constant over different angles indicating registration is consistent across different viewpoints (viewpoint invariant).}
+  \label{fig:sgv_distance}
+\end{figure}
+
 We additionally verify the inlier matches using the \emph{Spectral Geometric Verification}~\cite{vidanapathirana2023ral} method, which provides an additional measure of the quality of the feature matches. In short, SGV computes pairwise cycle consistency of local feature correspondances. Given the correspondances of local features between two point clouds, $\{c_1, c_2 \ldots c_n\}$ we can construct a graph $M \in \R{n \times n}$ where $M_{i,j}$ is similarity score between $c_i$ and $c_j$. The intuition is if both $c_i$ and $c_j$ are inliers they are pairwise consistent in their coordinate frames, but if one of correspondances is an outlier they are not consistent. 
 
 In \figref{fig:cycle-consistency} shows the idea of pairwise cycle consistency. Consider two correspondances $\{c_1, c_2\}$, there are keypoints $\{kp_1, kp_2\}$ in query point clouds and corresponding keypoints $\{kp'_1, kp'_2\}$ in loop candidate point clouds ($kp \in \R{3}$). Following the \figref{fig:cycle-consistency} notations, two correspondances $\{c_1, c_2\}$ represented as two edges $\Delta\mathbf{T}_{l,i}$ and $\Delta\mathbf{T}_{j,k}$ and nodes $\{n_i, n_j, n_k, n_l\}$ represent keypoints  $\{kp_1, kp_2, kp'_2, kp'_1\}$.
@@ -84,28 +105,23 @@ where $v$ is the eigenvector of the largest eigenvalue of $M$. The SGV score $s$
 
 The author of Logg3dNet proposed SGV check for reranking top-$k$ candidates obtained from descriptor distance matching in \secref{subsubsec:loop-candidate}. But, instead we used SGV for verifying registration quality against baseline distance. \figref{fig:sgv_distance} shows the SGV score computed against the distance between two point clouds. We used SGV score as an indication of baseline distance of loop candidates. For example, we set $SGV_{score}=0.1$ as a threshold for \SI{10}{\meter} baseline distance, and reject the loop candidates if SGV score is smaller than 0.1.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics*[width=0.8\columnwidth]{pics/methods_svg_distance.png}
-  \caption{SGV scores computed against baseline distances and angles of loop closures obtained. The SGV score becomes smaller when the baseline distance becomes larger, indicating that smaller proportion of correct correspondances are found. $SGV_{score}=0.1$ approximately indicates \SI{10}{\meter} baseline distance, and $SGV_{score}=0.05$ upto \SI{20}{\meter}. Also, we observed that SGV score is constant over different angles indicating registration is consistent across different viewpoints (viewpoint invariant).}
-  \label{fig:sgv_distance}
-\end{figure}
 
 
 \subsubsection*{\textbf{Pairwise Loop Closures Cycle Consistency Check}}
-Lastly, we carry out a \emph{loop closure cycle consistency} verification (\figref{fig:cycle-consistency}), which checks whether the relative transformations between pairs of nodes in posegraph are mutually consistent with one another. Given four pose graph nodes $n_i, n_j, n_k, n_l$, we test how close the following equivalence holds:
-\begin{equation}
-\Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i}\, \approx \mathbf{I}_{4\times4} 
-\end{equation}
-If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\degree} we reject the candidate. This is shown in \figref{fig:cycle-consistency}, the interpretation of these transformations change depending on operation modes: online SLAM (\secref{sec:online_slam_mode}), offline multi-mission SLAM (\secref{sec:offline}), or pure relocalization (\secref{sec:relocalization}). However, the main idea remains the same: to verify if two successive loop candidates are consistent across different frames (Alg.\ref{alg:pairwise_cycle_check} shows pseudocodes of pairwise cycle consistency check when implemented).
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics*[width=0.8\columnwidth]{pics/methods_pairwise_consistency.pdf}
   \caption{Our proposed pairwise cycle consistency check is general and applies to the online and offline multi-mission SLAM case, as well as relocalization tasks. We only need the relative transformation estimates and loop candidates between four nodes $n_i, n_j, n_k, n_l$ to verify the validity of a loop. Please refer to \secref{subsubsec:coarse-registration} for technical details.}
   \label{fig:cycle-consistency}
 \end{figure}
+Lastly, we carry out a \emph{loop closure cycle consistency} verification (\figref{fig:cycle-consistency}), which checks whether the relative transformations between pairs of nodes in posegraph are mutually consistent with one another. Given four pose graph nodes $n_i, n_j, n_k, n_l$, we test how close the following equivalence holds:
+\begin{equation}
+\Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i}\, \approx \mathbf{I}_{4\times4} 
+\end{equation}
+If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\degree} we reject the candidate. This is shown in \figref{fig:cycle-consistency}, the interpretation of these transformations change depending on operation modes: online SLAM (\secref{sec:online_slam_mode}), offline multi-mission SLAM (\secref{sec:offline}), or pure relocalization (\secref{sec:relocalization}). However, the main idea remains the same: to verify if two successive loop candidates are consistent across different frames (Alg.\ref{alg:pairwise_cycle_check} shows pseudocodes of pairwise cycle consistency check when implemented).
 
-\begin{algorithm}
+
+\begin{algorithm}[htbp]
   \caption{Pairwise Cycle Check between two consecutive loop closures: $\Delta\mathbf{T}_{t-1}$, $\Delta\mathbf{T}_{t}$ }    
   \label{alg:pairwise_cycle_check}
 

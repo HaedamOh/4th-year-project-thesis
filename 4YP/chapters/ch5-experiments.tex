@@ -25,7 +25,6 @@ In this experiment, we evaluated the descriptors of four different place recogni
 We used two different LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai QT64. The XT32 is a long-range, narrow field of view, 32-beams LiDAR, and QT64 is a short-range, wide field of view LiDAR. Note that Wild-Place\cite{knights2023icra} dataset was collected using a inclined VLP-16 LiDAR mounted on spinning motor. This enabled capturing the canopy of the forest, which is difficult for our backpack LiDAR setup. The specifications of the LiDAR sensors used in the experiments are summarized in \tabref{tab:lidar_specs}.
 \begin{table}[ht]
   \centering
-  \caption{LiDAR Specifications for Datasets.}
   \label{tab:lidar_specs}
   \begin{tabular}{|p{2.5cm}|p{2cm}|p{2.3cm}|p{2.3cm}|c|}
     \hline
@@ -42,6 +41,7 @@ We used two different LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai 
     \centering Forest of Deans &\centering QT64 &\centering 100 &\centering 30 & Low \\
     \hline
   \end{tabular}
+\caption{Datasets and LiDAR specifications.}
 \end{table}
 
 
@@ -127,35 +127,23 @@ From \figref{fig:exp_2_3_loop_closure_comparison}, we can observe that ScanConte
 % Third experiment: Offline Multi-Mission SLAM
 %%% 
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_big2.png}
-  \caption{Offline multi-mission SLAM. Left: Wytham - a densely wooded area with uneven terrain, including hills. Center: Evo - featuring a LiDAR setup on an incline, with loop closures occurring primarily when viewpoints are closely aligned. Right: Forest of Dean - flatter terrain compared to Wytham, with a sparser plantation, allowing for loop closures to be captured at greater distances. }
-  \label{fig:exp_multi_mission}
-\end{figure}
 
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.99\columnwidth]{pics/exp_3_offline_fullmap_portrait.png}
-  \caption{Offline multi-mission SLAM point clouds output. The map looks consistent and correctly merged as shown in \figref{fig:exp_multi_mission}.}
-  \label{fig:exp_offline_clouds}
-\end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.99\columnwidth]{pics/exp_3_offline_pointclouds_trunk.png}\label{fig:truk of trees}
-  \caption{A region of Evo merged forest map point clouds coloured by height. I cropped canopies to check trunks of trees. Trunks are very distinct showing no evidence of drift occured.}
-  \includegraphics[width=0.99\columnwidth]{pics/exp_3_offline_pointclouds_trunk_BV3.png}\label{fig:trunk of trees BV}
-  \caption{Trunks of trees from Berd's eye view. We observed circular shapes for tree trunks clearly seen in the point clouds, indicating the map scanned in different viewpoints were registered correctly.}
-\end{figure}
+
+
 \section{Offline Multi-Mission SLAM} 
 \label{sec:offline_multi_mission}
 In this experiment, we showcased the ability of our approach to obtain loop closures between different mapping missions and to merge those missions into a common map. In this task, we employed tighter descriptor thresholds ($\tau_{s}$) compared to the online SLAM task, in order to reduce the number of false positive loop candidates.
 Figure \ref{fig:exp_multi_mission} presents the results of merging different sequences within three different datasets: Wytham Woods, Evo, and the Forest of Dean. Each individual mission covers approximately one hectare, with merged map areas ranging from three to five hectares.
 % \mfallon{these details about sensors should have been mentioned before hand. can you introduce the two sensors in the start of the experiments and refer to them ad the Wide FOV and Narrow FOV lidar afterwards.}
 We observed that there were more frequent \emph{intermission} loop closures in the Forest of Dean compared to Wytham in overlapping areas. This can be attributed to the higher tree density, foliage, and vegetation present in Wytham, making the descriptors less distinctive.     
-
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.99\columnwidth]{pics/exp_3_offline_fullmap_portrait.png}
+  \caption{Offline multi-mission SLAM point clouds output for Evo.}
+  \label{fig:exp_offline_clouds}
+\end{figure}
 Further, we tested the robustness of our system on the Evo multi-mission dataset, where the XT32 LiDAR was placed at a \SI{45}{\degree} inclination aimed at capturing the forest canopy. Despite the asymmetry in point clouds introduced by this inclination change, which primarily captured points in the forward direction, our approach successfully identified loop closures and achieved multi-mission map merging.
 
 Overall, our experiments showed potential for efficient large-scale mapping, as we did not require to start at the open access roads nor following exactly the same paths to achieve loop closures between inter-missions. We also built the map incrementally, one section at a time, hence overlapping areas could only be guaranteed for subsequent missions.
@@ -165,11 +153,21 @@ Overall, our experiments showed potential for efficient large-scale mapping, as 
 %MF: I removed these comments. I dont think they were adding
 %, and facilitates loop-closures with much smaller overlapping areas between inter-missions
 %Also, most of them occurred at the start and end of each missions. 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\columnwidth]{pics/exp_3_offline_pointclouds_trunk.png}\label{fig:truk of trees}
+  \caption{A region of Evo merged forest map point clouds coloured by height. I cropped canopies to check trunks of trees. Trunks are very distinct showing no evidence of drift occured.}
+  \includegraphics[width=0.9\columnwidth]{pics/exp_3_offline_pointclouds_trunk_BV3.png}\label{fig:trunk of trees BV}
+  \caption{Trunks of trees from Berd's eye view. We observed circular shapes for tree trunks clearly seen in the point clouds, indicating the map scanned in different viewpoints were registered correctly.}
+\end{figure}
 
 
-
-%\mfallon{The name is `Forest of Dean'. It is not Deans or Dean. It is always `Forest of Dean'}
-
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_big2.png}
+  \caption{Offline multi-mission SLAM. Left: Wytham - a densely wooded area with uneven terrain, including hills. Center: Evo - featuring a LiDAR setup on an incline, with loop closures occurring primarily when viewpoints are closely aligned. Right: Forest of Dean - flatter terrain compared to Wytham, with a sparser plantation, allowing for loop closures to be captured at greater distances. }
+  \label{fig:exp_multi_mission}
+\end{figure}
 
 \begin{table}[htbp]
   \centering
@@ -234,6 +232,19 @@ Based on this analysis, we establish an inlier threshold to ensure that correcti
 % Alongside \figref{fig:exp_2_2_loop_closure_histograms}, further analysis has been done how robust the loop-candidates are. 
 % \figref{fig:ablation_icp_inliers} shows that under 10m distance, ICP inliers are high as over 4k points, and correction error is below 1m. However, the distribution of loop-candidates start to diverge significantly after 10m: correction error no longer bounds to 1m and the number of inliers are much less than 4k points. 
 % Setting a low ICP inlier threshold will provide far distance loop-closures, but there is a chance of getting False Positives.
+\section{Ablation Studies}
+\subsection*{Computation Analysis}
+top-1 to top-5 candidates implemented with parallel computations threading for RANSAC registration. 
+
+\subsection*{Parameters}
+- Voxel size 
+
+- Descriptor distance 
+
+- ICP inlier threshold 
+
+- LIOSAM Odometry system 
+
 
 \begin{figure}[t]
   \centering
