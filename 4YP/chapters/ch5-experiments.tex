@@ -55,8 +55,8 @@ We used two different LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai 
 \subsection*{Precision-Recall Curves}
 Precision-recall curves (See \figref{fig:pr_curves}) show how accurately (precision) and frequently (recall) each  model detects correct loop candidates within a reasonable distance threshold (here set to 10\,m) at various descriptor thresholds $\tau_{s}$ in four different forests. Among positive candidates   (whose descriptor distance < $\tau_{s}$ ), we classify them into true positive(\emph{TP}) and false positive(\emph{FP}) depending on whether the candidate is actually located within the loop-closure distance threshold, 10 meter. 
 Similarly, among negative candidates, we classify them into true negative(\emph{TN}) and false negative(\emph{FN}) depending on their true location. Thus:
-\[ Precision = \frac{TP}{TP + FP} \]
-\[ Recall = \frac{TP}{TP + FN} \]
+\[ Precision = \frac{TP}{TP + FP} \quad   \ Recall = \frac{TP}{TP + FN} \]
+
 From the precision-recall curves (\figref{fig:pr_curves}), it is evident that Logg3dNet consistently outperforms the other models across the four different forests. Particularly, on the Evo and Stein am Rhein datasets, where a longer range with narrow field of view Hesai XT32 LiDAR was employed, Logg3dNet showed the best performance both in terms of precision and recall, without experiencing any sudden drops in precision.
 In contrast, ScanContext demonstrates a significant decrease in precision, attributed to a limited vertical field of view of LiDAR sensor. In more challenging scenarios such as Wytham Woods characterized by complex terrains featuring hills and valleys with dense tree clutter captured with a wide field of view QT64 LiDAR, handcrafted models show a notable decline in performance. However, Logg3dNet remains robust, successfully retrieving a substantial portion of correct loop-candidates, achieving a 70\% precision at a 50\% recall rate. 
 
@@ -83,23 +83,29 @@ In this experiment, we investigate the online place recognition capability of ou
   \centering
   \includegraphics[width=0.8\columnwidth]{pics/exp_2_1_evo16_online.png}
   \includegraphics[width=0.8\columnwidth]{pics/exp_2_1_evo12_online.png}
-  \caption{Online SLAM results on Evo16(top) and Evo12(bottom). Initial candidates (Blue) proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph.}
-  \label{fig:exp_2_1_online_place_recognition}
+  \caption{Online SLAM results on Evo dataset. Evo16(top) and Evo12(bottom). Initial candidates (Blue) proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph.}
+  \label{fig:exp_2_1_evo_online}
 \end{figure}
 \subsection*{Online Single Mission SLAM }
 % Interpret results exp_2_1
-\figref{fig:exp_2_1_online_place_recognition} presents an illustrative example of online SLAM performance on the Evo datasets, depicting the sets of loop candidates after each verification step. Initially, many loop closure candidates are proposed (shown in blue) under a descriptor matching threshold $\tau_{s}$ of $F_1$-max score. Loop closures beyond a conservative estimate of \SI{20}{\meter} are rejected using the odometry information. After this, a subset of loop closure candidates are identified using RANSAC matching (highlighted in orange), and finally, a refined set of loop closures that pass the consistency and ICP steps are integrated into the SLAM framework. Final loop closures (shown in red) are one of ICP verified loop candidates by checking pose graph density to avoid over-constraining the pose graph. Evo16 is densly scanned dataset where each zigzag turn is about 10-15m apart, and Evo12 is mapped sparsely with about 20-30m apart. For Evo16, we can observe frequent loop candidates and final loop closures upto 15m between each zigzag turn, whereas for Evo12, loop closures are less frequent and final loop closures were detected less than 10m apart. We observed that the system can identify loop closures reliably upto 15m when it is densly scanned and upto 10m when it is sparsely scanned.  
+\figref{fig:exp_2_1_evo_online} presents an illustrative example of online SLAM performance on the Evo datasets, depicting the sets of loop candidates after each verification step. Initially, many loop closure candidates are proposed (shown in blue) under a descriptor matching threshold $\tau_{s}$ of $F_1$-max score. Loop closures beyond a conservative estimate of \SI{20}{\meter} are rejected using the odometry information. After this, a subset of loop closure candidates are identified using RANSAC matching (highlighted in orange), and finally, a refined set of loop closures that pass the consistency and ICP steps are integrated into the SLAM framework. Final loop closures (shown in red) are one of ICP verified loop candidates by checking pose graph density to avoid over-constraining the pose graph. \\
+\textbf{Evo}\hspace{0.5em} We tested on Evo dataset as shown \figref{fig:exp_2_1_evo_online}. Evo16 sequence is densly scanned where each zigzag turn is about 10-15m apart, whereas Evo12 is mapped sparsely with about 20-30m apart. For Evo16, we can observe frequent loop candidates upto \SI{20}{\meter} between each zigzag turn, whereas for Evo12, loop closures are less frequent and more candidates (above \SI{15}{\meter}) are strongly rejected before RANSAC registration(Blue lines). In summary, we observed that the system can reliably detect loop closures inside the dense forest in both cases and correct the drift. \\
+\textbf{Wytham Woods}\hspace{0.5em} We further tested on more challenging dataset, Wytham Woods, which is a densely wooded area with uneven terrain, including hills. In \figref{fig:exp_2_1_ewytham_online}, we observed that there are still enough numbers of correct RANSAC-registered loop candidates, but ICP could not fine-register them. For example, regarding Mission D(top figure) of \figref{fig:exp_2_1_ewytham_online}, our system correctly detected loop candidates and RANSAC registered them (Yellow lines) at each turns. However, the ICP rejected almost all candidates due to very small number of overlapping point clouds between two scans (usually 2k-3k out of 20k points, $\sim$\SI{10}{\percent} overlaps). Unfortunately, lowering ICP thresholds to less than $\sim$ 3k points resulted in failure of system. Our system suffers from high outliers rate due to occlusions and sparse point clouds at the far distance making ICP registration challenging. As a result, our system partly corrected the drifts in both sequences, failing to correct drifts at the start. 
 
-
-
-
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\columnwidth]{pics/exp_2_1_wytham_D.png}
+  \includegraphics[width=0.72\columnwidth]{pics/exp_2_1_wytham_C.png}
+  \caption{Online SLAM results on Wytham Woods, two sequences Mission D(top) and Mission C(bottom) are shown. Blue lines are initial candidates proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph.}
+  \label{fig:exp_2_1_ewytham_online}
+\end{figure}
 
 
 \subsection*{Loop Closure Statistics}
 % Present results in exp2_2
-Alongside visual illustrations of loop closures, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs across considerable baseline distances (\SIrange{10}{20}{\meter}). We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making convergence of ICP challenging.
-
-Similarly, in terms of viewpoint orientation difference, we observed that a large proportion of the loop candidates up to \SI{90}{\degree} difference are verified both at the RANSAC-registration and ICP-based checks. However, we observed a degradation of performance over \SI{90}{\degree}, which can be attributed to the occlusions in the scans present at large orientation differences. Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
+Alongside visual illustrations of loop closures, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs across considerable baseline distances (\SIrange{10}{20}{\meter}). \\
+\textbf{Baseline distance}\hspace{0.5em} We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making convergence of ICP challenging. \\
+\textbf{Viewpoints difference}\hspace{0.5em} Similarly, in terms of viewpoint orientation difference, we observed that a large proportion of the loop candidates up to \SI{90}{\degree} difference are verified both at the RANSAC-registration and ICP-based checks. However, we observed a degradation of performance over \SI{90}{\degree}, which can be attributed to the occlusions in the scans present at large orientation differences. Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
 
 \begin{figure}[htbp]
   \centering
@@ -140,10 +146,13 @@ Figure \ref{fig:exp_multi_mission} presents the results of merging different seq
 We observed that there were more frequent \emph{intermission} loop closures in the Forest of Dean compared to Wytham in overlapping areas. This can be attributed to the higher tree density, foliage, and vegetation present in Wytham, making the descriptors less distinctive.     
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.99\columnwidth]{pics/exp_3_offline_fullmap_portrait.png}
-  \caption{Offline multi-mission SLAM point clouds output for Evo.}
+  \includegraphics[width=\columnwidth]{pics/exp_3_offline_fullmap_rotated.pdf}
+  \caption{Offline multi-mission SLAM point clouds output.}
+  \includegraphics[width=\columnwidth]{pics/exp_3_1_multimission_slam_evo.png}
+  \caption{Offline multi-mission SLAM (Evo).}
   \label{fig:exp_offline_clouds}
 \end{figure}
+
 Further, we tested the robustness of our system on the Evo multi-mission dataset, where the XT32 LiDAR was placed at a \SI{45}{\degree} inclination aimed at capturing the forest canopy. Despite the asymmetry in point clouds introduced by this inclination change, which primarily captured points in the forward direction, our approach successfully identified loop closures and achieved multi-mission map merging.
 
 Overall, our experiments showed potential for efficient large-scale mapping, as we did not require to start at the open access roads nor following exactly the same paths to achieve loop closures between inter-missions. We also built the map incrementally, one section at a time, hence overlapping areas could only be guaranteed for subsequent missions.
@@ -162,12 +171,29 @@ Overall, our experiments showed potential for efficient large-scale mapping, as 
 \end{figure}
 
 
+% \begin{figure*}[htbp]
+%   \centering
+%   \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_wytham.png}
+%   \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_evo.png}
+%   \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_dean.png}
+%   \caption{Offline multi-mission SLAM. Left: Wytham - a densely wooded area with uneven terrain, including hills. Center: Evo - featuring a LiDAR setup on an incline, with loop closures occurring primarily when viewpoints are closely aligned. Right: Forest of Dean - flatter terrain compared to Wytham, with a sparser plantation, allowing for loop closures to be captured at greater distances. }
+%   \label{fig:exp_multi_mission}
+% \end{figure*}
+
+
+
+
+
 \begin{figure}[htbp]
+  \ContinuedFloat
   \centering
-  \includegraphics[width=0.90\columnwidth]{pics/exp_3_1_multimission_slam_big2.png}
-  \caption{Offline multi-mission SLAM. Left: Wytham - a densely wooded area with uneven terrain, including hills. Center: Evo - featuring a LiDAR setup on an incline, with loop closures occurring primarily when viewpoints are closely aligned. Right: Forest of Dean - flatter terrain compared to Wytham, with a sparser plantation, allowing for loop closures to be captured at greater distances. }
-  \label{fig:exp_multi_mission}
+  \includegraphics[width=\columnwidth]{pics/exp_3_1_multimission_slam_wytham.png}
+  \caption{Offline multi-mission SLAM (Part 2).}
+  \includegraphics[width=\columnwidth]{pics/exp_3_1_multimission_slam_dean.png}
+  \caption{Offline multi-mission SLAM (Part 3).}
+  \label{fig:exp_multi_mission_part3}
 \end{figure}
+
 
 \begin{table}[htbp]
   \centering
@@ -219,37 +245,67 @@ We can check how effective pairwise consistency check is in relocalization. We c
 We checked how long it takes to relocalize and how far the robot can move before relocalization fails. We found that the system can relocalize within 1 second and 1 meter of distance. This is because we limit the pairwise consistency threshold at few centimeter level. This enables continuous relocalization only within centimeter level of error, while reducing recall.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Study of ICP inlier-based check}
+\section{Discussion \& Ablation Studies}
+
+
+\subsection*{Study of ICP inlier-based check}
 \label{sec:exp_icp_ablation}
 
 Our final experiment investigates the ICP inlier-based check on loop closure integration within the final pose graph optimization process. This analysis is crucial for ensuring that incorrect loop closures are not introduced into the optimized pose graph.
-\figref{fig:ablation_icp_inliers} illustrates the corrections (on top of the initial transformation prior) as estimated by the ICP registration at various distances. Additionally, the figure color-codes the points based on the number of inlier points obtained during the registration process, with blue indicating a large number of inliers and red indicating a smaller number.
+\figref{fig:icp_inliers} illustrates the corrections (on top of the initial transformation prior) as estimated by the ICP registration at various distances. Additionally, the figure color-codes the points based on the number of inlier points obtained during the registration process, with blue indicating a large number of inliers and red indicating a smaller number.
 Our observation suggests that loop closures occurring beyond 10\,m, which propose a substantial transformation correction often have fewer inlier ICP points and are thus less reliable.
 Based on this analysis, we establish an inlier threshold to ensure that corrections are limited to ICP corrections of less than 1 meter (shown in dotted red line). This threshold further reduces the number of incorrect loop closures from being integrated into the pose graph.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.99\linewidth]{pics/exp_4_ablation_icp_inliers_4cm}
+  \caption{Analysis of final ICP registration check. X-axis shows the distribution of loop-candidates by distance after ICP.
+  Y-axis shows ICP correction error w.r.t. the coarse-registration from RANSAC. Color indicates the number of ICP inliers,  30 iterations and RMSE= 0.01m, where clouds are cropped 50 by 50m, then downsampled to 20k points.}
+  \label{fig:icp_inliers}
+\end{figure}
+
 
 
 % What is the interpretation of the figure?
 % Alongside \figref{fig:exp_2_2_loop_closure_histograms}, further analysis has been done how robust the loop-candidates are. 
 % \figref{fig:ablation_icp_inliers} shows that under 10m distance, ICP inliers are high as over 4k points, and correction error is below 1m. However, the distribution of loop-candidates start to diverge significantly after 10m: correction error no longer bounds to 1m and the number of inliers are much less than 4k points. 
 % Setting a low ICP inlier threshold will provide far distance loop-closures, but there is a chance of getting False Positives.
-\section{Ablation Studies}
 \subsection*{Computation Analysis}
-top-1 to top-5 candidates implemented with parallel computations threading for RANSAC registration. 
+top-1 to top-5 candidates Run time analysis.
 
 \subsection*{Parameters}
-- Voxel size 
+There are several important parameters that should be tuned in our system for ddifferent LiDAR setups and different forest environments. \\
+\textbf{Voxel Size}\hspace{0.5em} During preprocessing step it is necessary to voxelize input point clouds for discritize representation using \emph{MinkosckiEngine, SparseTorch}. This voxel size is known to be critical for the performance of the model descriptors. Since both Logg3dNet and EgoNN are trained on WildPlace dataset, which is different from our dataset in terms of density and range of LiDAR point clouds, We empirically determined the optimal voxel size between \SIrange{0.1}{1.0}{\meter} through direct experimentation on our dataset. Tab.~\ref{tab:voxel_size} shows that optimal voxel sizes are \SI{0.1}{\meter} and \SI{0.6}{\meter} for Logg3dNet on Evo dataset. Since the difference is not significant, we decided to use voxel size of \SI{0.6}{\meter} considering computational efficiency.\\
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{p{2cm} *{6}{c}}
+      \toprule
+      \multicolumn{1}{l}{Testing} & \multicolumn{6}{c}{Voxel size (cm)} \\
+      \cmidrule{2-7}
+      \multicolumn{1}{l}{Datasets} & 10 & 20 & 40 & 60 & 80 & 100 \\
+      \midrule
+      Evo-12 &\textbf{0.89} &0.79 &0.77 &\textbf{0.86} &0.79 &0.78 \\
+      \addlinespace % Add space between rows
+      Evo-16 & \textbf{0.74} & 0.66 & 0.66 & \textbf{0.66} & 0.64 & 0.63 \\
+      \addlinespace % Add space between rows
+      Evo-18  &0.71 & 0.75 & \textbf{0.75} & \textbf{0.76} & 0.73 & 0.71 \\
+      \bottomrule
+  \end{tabular}
+
+  \caption{$F{1}_{max}$ score of Logg3dNet with different voxel sizes on Evo dataset. Bold numbers indicate the best and second best $F{1}_{max}$ score.}
+  \label{tab:voxel_size}
+\end{table}
+
+  
+\textbf{ICP inlier threshold} \hspace{0.5em} ICP inliers threshold is the least number of inliers to consider the ICP registration as successful at final verification step. As discussin in \secref{sec:icp_inliers}, the threshold is fine tuned to $sim$ 3k-5k points depending on the LiDAR setup and forest environments. 
+
+  
+  
+
 
 - Descriptor distance 
 
-- ICP inlier threshold 
 
 - LIOSAM Odometry system 
 
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.99\linewidth]{pics/exp_4_ablation_icp_inliers_4cm}
-  \caption{Analysis of final ICP registration check. X-axis shows the distribution of loop-candidates by distance after ICP.
-  Y-axis shows ICP correction error w.r.t. the coarse-registration from RANSAC. Color indicates the number of ICP inliers,  30 iterations and RMSE= 0.01m, where clouds are cropped 50 by 50m, then downsampled to 20k points. \haedam{reduce size}}
-  \label{fig:ablation_icp_inliers}
-\end{figure}
