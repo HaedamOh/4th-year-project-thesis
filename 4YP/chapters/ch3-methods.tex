@@ -26,9 +26,12 @@ In the following sections, we present the technical details of the place recogni
 \end{figure}
 
 \section{State Estimation}
-\textbf{Odometry} \hspace{0.5em} For our odometry system, we use a LiDAR-intertial factor graph-based odometry system, VILENS~\cite{wisth2023tro}. VILENS provides a continuous odometry estimate at high frequency and pose displacements are computed from LiDAR using Iterative Closest Point (ICP) algorithm with preintegrated IMU information. The odometry system is used to provide a prior estimate of the robot's pose, which is then refined by the pose graph SLAM system. 
+\textbf{Odometry} \hspace{0.5em} For our odometry system, we use a LiDAR-intertial factor graph-based odometry system, VILENS~\cite{wisth2023tro}. VILENS provides a continuous odometry estimate at high frequency and pose displacements are computed from LiDAR using Iterative Closest Point (ICP) algorithm with preintegrated IMU information. The odometry system is used to provide a prior estimate of the robot's pose, which is then refined by the pose graph SLAM system. \haedam{To-Do include some pictures}
 \newline
-\textbf{Pose graph LiDAR SLAM} \hspace{0.5em} We use a pose graph SLAM system to optimize the robot's pose estimate. The pose graph is constructed from odometry factors and loop closure factors. Each node contains a LiDAR scan and corresponding pose, and the edge is formed between consecutive nodes from incremental odometry estimates. Additionally, loop closure adds another constraint between two nodes. The odometry factors are provided by VILENS, while the loop closure factors are obtained from the place recognition server. The pose graph is optimized using iSAM2~\cite{Kaess2012} algorithm.
+\textbf{Pose graph LiDAR SLAM} \hspace{0.5em} We use a pose graph SLAM system to optimize the robot's pose estimate. The pose graph is constructed from odometry factors and loop closure factors. Each node contains a LiDAR scan and corresponding pose, and the edge is formed between consecutive nodes from incremental odometry estimates. Additionally, loop closure adds another constraint between two nodes. The odometry factors are provided by VILENS, while the loop closure factors are obtained from the place recognition server. The pose graph is optimized using iSAM2~\cite{Kaess2012} algorithm. \haedam{To-Do include some pictures}
+\newline
+\textbf{Point clouds preprocessing}
+\haedam{Do something}
 
 % Overall Pipeline
 % This star removes this subsection from the A,B,C list. Such that the task A,B,C match
