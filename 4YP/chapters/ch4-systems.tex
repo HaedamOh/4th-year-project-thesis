@@ -18,6 +18,7 @@ Our system uses \emph{Frontier} device as main sensors which comprises a LiDAR, 
 
 \begin{table}[htbp]
   \centering
+  \small
   \caption{Sensor specifications of \emph{Frontier} device.}
   \label{tab:sensors}
   \begin{tabular}{|c|c|>{\raggedright\arraybackslash}p{4.5cm}|}
@@ -48,7 +49,7 @@ Our system uses \emph{Frontier} device as main sensors which comprises a LiDAR, 
 \section{Implementations}
 \label{sec:implementation}
 \subsection{Robotic Operating System (ROS) Framework}
-The Robot Operating System (ROS) is a flexible framework for developing software for robotics applications. One of the key concepts in ROS is the publisher-subscriber model, where nodes (independent processes) communicate by publishing messages on topics and subscribing to messages on those topics. Publishers broadcast data, such as sensor readings or robot state information, while subscribers receive and process this data. Published topics will be shown in \emph{rqt graph} and connections between nodes. Additionally, ROS facilitates communication between nodes through service calls and servers. Services allow nodes to request specific tasks or information from one another, where the client sends a request message and the server responds accordingly, enabling more complex interactions beyond simple message passing. This is not normally shown in \emph{rqt graph} so I added on purpose of showning implementations. This modular and distributed architecture of ROS makes it well-suited for building modular and scalable robotic systems. The interface of \emph{rqt graph} is shown in \figref{fig:implementation_ros} and will follow this convention in the following diagrams for explaining implementations. 
+The Robot Operating System (ROS) is a flexible framework for developing software for robotics applications. One of the key concepts in ROS is the publisher-subscriber model, where nodes (independent processes) communicate by publishing messages on topics and subscribing to messages on those topics. Publishers broadcast data, such as sensor readings or robot state information, while subscribers receive and process these data. The nodes and published topics then estalbish a network that represents the data sharing; this can be visualized with ROS tools such as \emph{rqt graph} in \figref{fig:implementation_ros}. Additionally, ROS facilitates communication between nodes through service calls and servers. Services allow nodes to request specific tasks or information from one another, where the client sends a request message and the server responds accordingly, enabling more complex interactions beyond simple message passing. This modular and distributed architecture of ROS makes it well-suited for building modular and scalable robotic systems. 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.8\columnwidth]{pics/Implementation_ros_framework2.png}
@@ -68,8 +69,8 @@ It works followings: When most recent LiDAR scan and posegraph are available in 
 \end{figure}
 
 
-\subsection{Offline Multimission SLAM Map Merging}
-Offline Multimission SLAM maps merging is done by simple service call between VILENS SLAM Offline node and place recognition server node. From VILENS SLAM Offline node individual point clouds, cloud id of a mission and pose graph can be used as input to place recognition server node. The place recognition server node builds the database incrementally mission by mission. Then, when it finds loop closures it service calls back to VILENS SLAM Offline node. The overall offline multimission SLAM nodes and topics used are shown in \figref{fig:implementation_offline_slam}.  
+\subsection{Offline Multi-mission SLAM Map Merging}
+Offline Multi-mission SLAM maps merging is simplely done by  service call between VILENS SLAM Offline node and place recognition server node. From VILENS SLAM Offline node individual point clouds, cloud id of a mission and pose graph can be used as input to place recognition server node. The place recognition server node builds the database incrementally mission by mission. Then, when it finds loop closures it service calls back to VILENS SLAM Offline node. The overall offline multimission SLAM nodes and topics used are shown in \figref{fig:implementation_offline_slam}.  
 
 \begin{figure}[t]
   \centering
