@@ -309,14 +309,12 @@ In relocalization scenario, relocalizing to incorrect candidate leads to a sudde
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Parameter analysis \& Computational Analysis}
-In this section, we will discuss ICP inlier-based check rigorously. We will also provide a computational analysis of the system, including runtime and memory consumption. 
-
-\subsection*{Study of ICP inlier-based check}
-\label{sec:exp_icp_ablation}
-Our final experiment investigates the ICP inlier-based check on loop closure integration within the final pose graph optimization process. This analysis is crucial for ensuring that incorrect loop closures are not introduced into the optimized pose graph.
+In this section, we will discuss ICP inlier-based check rigorously. We will also provide a computational analysis of the system, including runtime and memory consumption.\\
+\newline
+\textbf{Study of ICP inlier-based check}\hspace{0.5em} Our final experiment investigates the ICP inlier-based check on loop closure integration within the final pose graph optimization process. This analysis is crucial for ensuring that incorrect loop closures are not introduced into the optimized pose graph.
 \figref{fig:icp_inliers} illustrates the corrections (on top of the initial transformation prior) as estimated by the ICP registration at various distances. Additionally, the figure color-codes the points based on the number of inlier points obtained during the registration process, with blue indicating a large number of inliers and red indicating a smaller number.
 Our observation suggests that loop closures occurring beyond 10\,m, which propose a substantial transformation correction often have fewer inlier ICP points and are thus less reliable.
-Based on this analysis, we establish an inlier threshold to ensure that corrections are limited to ICP corrections of less than 1 meter (shown in dotted red line). This threshold further reduces the number of incorrect loop closures from being integrated into the pose graph.
+Based on this analysis, we establish an inlier threshold to ensure that corrections are limited to ICP corrections of less than 1 meter (shown in dotted red line). This threshold further reduces the number of incorrect loop closures from being integrated into the pose graph.\\
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.99\linewidth]{pics/exp_4_ablation_icp_inliers_4cm}
@@ -324,19 +322,20 @@ Based on this analysis, we establish an inlier threshold to ensure that correcti
   Y-axis shows ICP correction error w.r.t. the coarse-registration from RANSAC. Color indicates the number of ICP inliers,  30 iterations and RMSE= 0.01m, where clouds are cropped 50 by 50m, then downsampled to 20k points.}
   \label{fig:icp_inliers}
 \end{figure}
-
-The ICP inliers threshold is fine tuned to $\sim$ 3k-5k points depending on the LiDAR setup and forest environments. There is trade-off between the baseline distance and the robustness of the loop-closure as shown in \figref{fig:icp_inliers_num}. For an example, in the Evo dataset, we set the threshold to 3k points, whereas in the Wytham Woods, we set the higher threshold to 4k-5k points. 
+\newline
+\textbf{Setting ICP inlier thresholds} \hspace{0.5em} The ICP inliers threshold is the least number of points required to fine registered loop candidates. Only if ICP inliers turned out to be higher than ICP inliers threshold we accept the loop closure candidate. 
+The ICP threshold should be fine-tuned to $\sim$ 3k-5k points depending on the LiDAR setup and forest environments. There is trade-off between the baseline distance and the robustness of the loop-closure as shown in \figref{fig:icp_inliers_num}. For an example, in the Evo dataset, we set the threshold to 3k points, whereas in the Wytham Woods, we set the higher threshold to 4k-5k points. \\
  \begin{figure}[t]
   \centering
-  \includegraphics[width=0.99\linewidth]{pics/exp_4_icp_inliers_num1.pdf}
-  \caption{Loop closure distribution by distance at various ICP inlier thresholds. Blue lines are accepted loop candidates and Red lines are rejected candidates. Stricter(higher) ICP inlier threshold will provide more robust loop-closures but baseline distance will be shorter, whereas lower ICP inlier threshold will provide far distance loop-closures but there is a chance of getting False Positives.}
+  \includegraphics[width=0.99\linewidth]{pics/exp_4_icp_inliers_num2.pdf}
+  \caption{Loop closure distribution by distance at various ICP inlier thresholds. Blue lines are accepted loop candidates and Red lines are rejected candidates. Stricter (higher) ICP inlier threshold will provide more robust loop-closures but baseline distance range will be shorter, whereas lower ICP inliers will allow far baseline distance loop-closures but there is a chance of getting false positive loop candidates.}
   \label{fig:icp_inliers_num}
 \end{figure}
 % What is the interpretation of the figure?
 % Alongside \figref{fig:exp_2_2_loop_closure_histograms}, further analysis has been done how robust the loop-candidates are. 
 % \figref{fig:ablation_icp_inliers} shows that under 10m distance, ICP inliers are high as over 4k points, and correction error is below 1m. However, the distribution of loop-candidates start to diverge significantly after 10m: correction error no longer bounds to 1m and the number of inliers are much less than 4k points. 
 % Setting a low ICP inlier threshold will provide far distance loop-closures, but there is a chance of getting False Positives.
-\subsection*{Computation Analysis}
+\newline
 {\textbf{Runtime Analysis}}\hspace{0.5em} Currently the system requires a GPU for descriptor extraction. The system runs at 0.73 Hz on a laptop with an Intel i7-10750H CPU and an NVIDIA RTX A3000 GPU. The processing time for the top-1 loop closure candidate detection is shown in \tabref{tab:my-table}. The descriptor extraction and RANSAC featuring matching are the most time-consuming process, thus running below 1Hz. It is not yet ideal for real-time applications, but it is sufficient for using in reprocessing. 
 \begin{table}[h]
   \centering
@@ -351,9 +350,8 @@ The ICP inliers threshold is fine tuned to $\sim$ 3k-5k points depending on the 
   \label{tab:my-table}
 \end{table}
 \newline
-\textbf{Memory Consumption}\hspace{0.5em} Dimension of global and local descriptor is 1028 and (N,256) respectively (N is the number of keypoints). This means one global descriptor requires only 8 bytes of memory, and one local descriptor requires $\sim$2KB of memory. The memory consumption of the system is mainly dominated by the local descriptors, which are stored in the GPU memory. One seuqnece of run ($\sim$1000 scans) requires $\sim$2GB of GPU memory.
-
-\subsection*{Hyper Parameters}
+\textbf{Memory Consumption}\hspace{0.5em} Dimension of global and local descriptor is 1028 and (N,256) respectively (N is the number of keypoints). This means one global descriptor requires only 8 bytes of memory, and one local descriptor requires $\sim$2KB of memory. The memory consumption of the system is mainly dominated by the local descriptors, which are stored in the GPU memory. One seuqnece of run ($\sim$1000 scans) requires $\sim$2GB of GPU memory.\\
+\newline
 \textbf{Voxel Size}\hspace{0.5em} During preprocessing step it is necessary to voxelize input point clouds for discritize representation using \emph{MinkowskiEngine~\cite{choy20194cvpr}, SparseTorch~\cite{tang2023MICRO} with CUDA}. This voxel size is known to be critical for the performance of the model descriptors. Since both Logg3dNet and EgoNN are trained on WildPlace dataset, which is different from our dataset in terms of density and range of LiDAR point clouds, We empirically determined the optimal voxel size between \SIrange{0.1}{1.0}{\meter} through direct experimentation on our dataset. Tab.~\ref{tab:voxel_size} shows that optimal voxel sizes are \SI{0.1}{\meter} and \SI{0.6}{\meter} for Logg3dNet on Evo dataset. Since the difference is not significant, we decided to use voxel size of \SI{0.6}{\meter} considering computational efficiency.\\
 
 \begin{table}[htbp]
