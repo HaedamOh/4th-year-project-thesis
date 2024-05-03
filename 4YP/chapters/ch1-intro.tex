@@ -11,7 +11,7 @@
 \subsection*{Motivation}
 Place recognition is an essential capability used to minimize the drift in the pose estimate produce by a Simultaneous Localization and Mapping (SLAM), as well as to re-localize in previously mapped areas. 
 LiDAR-based place recognition systems have demonstrated robustness by effectively capturing scene structure while showing low susceptibility to visual changes, making them suitable for long-term navigation. 
-Previous methods have primarily focused on the problem of autonomous driving in urban environments (characterised by long linear sequences), with their efficacy in natural settings much less tested.
+Previous methods have primarily focused on the problem of autonomous driving in urban environments (characterized by long linear sequences), with their efficacy in natural settings much less tested.
 %\mfallon{Wildplaces dataset is a counter example of this.} 
 Recent ongoing applications in natural environments, including agriculture, environmental monitoring, conservation, and search and rescue, highlight the significance of extending research efforts beyond urban landscapes.
 
@@ -19,7 +19,7 @@ Recent ongoing applications in natural environments, including agriculture, envi
 % Why natural environment 
 Despite the advancements of LiDAR-based place recognition in urban areas, its application in unstructured natural environments like forests presents several notable challenges. 
 Firstly, natural environments are irregular structures like trees, which not only lack fine structure but also undergo seasonal changes, affecting their shape and density over time. This complicates the creation of consistent geometric representations crucial for accurate place recognition.
-Secondly, a limited field of view and occlusions of a LiDAR sensor pose a loss of information. In large-scale natural environment, LiDAR sensors often struggle to capture the complete vertical extent of the environment. 
+Secondly, a limited field of view and occlusions of a LiDAR sensor pose a loss of information. In large-scale natural environments, LiDAR sensors often struggle to capture the complete vertical extent of the environments. 
 This issue is particularly common in areas with tall, cluttered trees.  Undulating terrains and dense trees cause occlusions resulting in incomplete scans of a LiDAR sensor. 
 Lastly, unique, undefined trajectories or paths when exploring dense forests pose another challenge: a place recognition capability of identifying its location not exctly at the same visited place but 'near by' location. 
 
@@ -28,7 +28,7 @@ Lastly, unique, undefined trajectories or paths when exploring dense forests pos
 %% WHICH PROBLEM
 % Second, explain WHICH problem you are solving/address to solve: Compare WildPlace  
 \subsection*{Objectives}
-Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by hand-held spinning LiDAR, capturing seasonal changes within the forest. The dataset was used to evaluate different stete-of-the-art place recognition models in forest environments focusing on localization tasks along the access roads of a national park. The main outcome of their work was that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, without the strong structural cues that access roads provide roads. Additionally we are also interested in testing the accuracy of precise 6DoF pose estimation for forestry or biodiversity monitoring applications.
+Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by hand-held spinning LiDAR, capturing seasonal changes within the forest. The dataset was used to evaluate different state-of-the-art place recognition models in forest environments focusing on localization tasks along the access roads of a national park. The main outcome of their work was that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, without the strong structural cues that access roads provide roads. Additionally we are also interested in testing the accuracy of precise 6DoF pose estimation for forestry or biodiversity monitoring applications.
 
 
 %%%%%%%%%%%%%%%%%%%

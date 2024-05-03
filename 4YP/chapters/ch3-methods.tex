@@ -34,8 +34,8 @@ The odometry system is used to provide a locally consistent estimate of the robo
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{pics/methods_vilens_factorgraph2.pdf}
-  \caption{VILENS odometry system(Left) as a factor graph representation. The factors are: prior (black), visual
- (yellow), lidar planes (green), lidar lines (red), preintegrated IMU (orange), preintegrated velocity (from leg kinematics, blue), and lidar odometry (from ICP registration, magenta). State nodes are white, while landmarks are grey. In forest environments, only LiDAR odometry and IMU factors are used without visual factors. Pose graph SLAM (Right) optimizes the poses after successful loop closure verification. The pose graph is constructed from odometry factors and loop closure factors.}
+  \caption{Left: VILENS odometry system as a factor graph representation. The factors are: prior (black), visual
+ (yellow), lidar planes (green), lidar lines (red), preintegrated IMU (orange), preintegrated velocity (from leg kinematics, blue), and lidar odometry from ICP registration (magenta). State nodes are white, while landmarks are grey. In forest environments, only LiDAR odometry and IMU factors are used without visual factors. Right: pose graph SLAM. The system optimizes the poses after successful loop closure verification. The pose graph is constructed from odometry factors and loop closure factors.}
   \label{fig:vilens_factorgraph}
 \end{figure}
 
@@ -64,8 +64,8 @@ The main inputs are the pose graph, with corresponding LiDAR scans attached to e
 \label{subsubsec:loop-candidate}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\columnwidth]{pics/methods_fig_descriptor1.pdf}
-  \caption{Different types of place recognition descriptors on Wild-Place~\cite{knights2023icra} data. ScanContext(Left), STD(Middle), EgoNN and Logg3dNet(Right). ScanContext encodes maximum height at each sector(radius,angle) and compute a 2D descriptor. STD computes corners of planes (trunk of trees) and connect them to multiple triangles. EgoNN and Logg3dNet both compute learning-based pointwise descriptors in voxelized point clouds.  }
+  \includegraphics[width=\columnwidth]{pics/methods_fig_descriptor2.pdf}
+  \caption{Different types of place recognition descriptors on Wild-Place~\cite{knights2023icra} data. Left: ScanContext, Middle: STD, Right: EgoNN and Logg3dNet(Right). ScanContext encodes maximum height at each sector(radius,angle) and compute a 2D descriptor. STD computes corners of planes (trunk of trees) and connect them to multiple triangles. EgoNN and Logg3dNet both compute learning-based pointwise descriptors in voxelized point clouds coloured by simillar point features.}
   \label{fig:descriptors_example}
 \end{figure}
 Initial loop closure candidates are obtained by comparing global descriptors extracted from the pose graph scans as well as the query scan. In this thesis, we evaluate four state-of-the-art methods for descriptor extraction: the learning-based Logg3dNet~\cite{vidanapathirana2022icra} and EgoNN~\cite{komorowski2022ral}, as well as the handcrafted ScanContext~\cite{kim2018iros} and STD~\cite{yuan2023icra}. \figref{fig:descriptors_example} shows their descriptors examples computed on Wild-Place data.  
@@ -77,7 +77,7 @@ To obtain candidates, we compute the pairwise descriptor distances of the scan t
   \mathbf{S} = \mathbf{D} \cdot \mathbf{d}_{q} \in \R{N \times 1}
 \end{equation}
 The vector of descriptor distances $\mathbf{S}$ is sorted by increasing distance, and only the top-$k$ candidates are selecting using a distance threshold $\tau_{s}$, which is set by the $F_1$-max score from testing data.
-If a spatial prior is available, for example from LiDAR-inertial odometry, we also perform an additional spatial check discarding all the candidates that are more than conservative estimate of \SI{20}{\meter} away from the query scan. The output is a set of candidate nodes $\{ n_c\}$ (We assumed that marginal covariance of the odometry is much less than \SI{20}{\meter}).
+If a spatial prior is available, for example from LiDAR-inertial odometry, we also perform an additional spatial check discarding all the candidates that are more than conservative estimate of \SI{20}{\meter} away from the query scan. The output is a set of candidate nodes $\{ n_c\}$.
 
 
 % 2.1 Pose Estimation (RANSAC) ... notation is a bit confusing.
@@ -102,7 +102,7 @@ Next, we estimate the relative 6DoF transformation that expresses the pose assoc
 \end{figure}
 
 \subsubsection*{\textbf{Spectral Geometric Verification (SGV)}}
-We additionally verify the inlier matches using the \emph{Spectral Geometric Verification}(SGV)~\cite{vidanapathirana2023ral} method, which provides an additional measure of the quality of the feature matches. Essentially, SGV checks pairwise cycle consistency of local feature correspondences between two point clouds. Given the correspondences between two point clouds, $\mathcal{C}=\{c_1, c_2 \ldots c_n\}$ we can construct a graph $M \in \R{n \times n}$ where $M_{i,j}$ represents similarity score $s$ between $c_i$ and $c_j$. If both $c_i$ and $c_j$ are correct inliers they should be pairwise consistent in their coordinate frames with high similarity score $s$, but if one of correspondences is an outlier they will not be consistent with low similarity score $s$. 
+We additionally verify the inlier matches using the \emph{Spectral Geometric Verification}(SGV)~\cite{vidanapathirana2023ral} method, which provides an additional measure of the quality of the feature matches. Essentially, SGV checks pairwise cycle consistency of local feature correspondences between two point clouds. Given the correspondences between two point clouds, $\mathcal{C}=\{c_1, c_2 \ldots c_n\}$ we can construct a graph $\mathbf{M} \in \R{n \times n}$ where $M_{i,j}$ represents similarity score $s$ between $c_i$ and $c_j$. If both $c_i$ and $c_j$ are correct inliers they should be pairwise consistent in their coordinate frames with high similarity score $s$, but if one of correspondences is an outlier they will not be consistent with low similarity score $s$. 
 \begin{figure}[t]
   \centering
   \includegraphics*[width=0.9\columnwidth]{pics/methods_svg_distance2.png}
@@ -112,7 +112,7 @@ We additionally verify the inlier matches using the \emph{Spectral Geometric Ver
 \end{figure}
 In \figref{fig:cycle-consistency} shows the idea of pairwise cycle consistency. In this case, nodes $\{n_i, n_j, n_k, n_l\}$ represent keypoints $\{\mathbf{p_i}, \mathbf{p_j}, \mathbf{p_k}, \mathbf{p_l}\}$ where $\mathbf{p} \in \R{3}$ in own base frame, and two correspondences $c_1 =\{\mathbf{p_i}, \mathbf{p_l}\}$, $c_2=\{\mathbf{p_j}, \mathbf{p_k}\}$ are considered. Then edge between $\{n_i, n_j\}$  represents euclidean distance $\| \mathbf{p_i}-\mathbf{p_j} \|$, and similarly edge between $\{n_k, n_l\}$ will be $\| \mathbf{p_k}-\mathbf{p_l} \|$. Now we can minimise the error $d$ between these two distances to verify the quality of the feature matches considering two correspondences, $c_1$ and $c_2$. 
 \begin{equation}
-  d_{1,2} = |\| \mathbf{p_i}-\mathbf{p_j} \| - \| \mathbf{p_k}-\mathbf{p_l} \| | 
+  d_{1,2} = \|\| \mathbf{p_i}-\mathbf{p_j} \| - \| \mathbf{p_k}-\mathbf{p_l} \| \| 
 \end{equation}
 \begin{equation}
   M_{1,2} = max( 0 , 1 - \left(\frac{d_{i,j}}{d_{\text{thres}}}\right)^2 ) 
@@ -125,12 +125,12 @@ We then compute the total SGV score $s$ considering all correspondences $\mathca
 \end{equation}
 By finding maximum inliers $v^{*}$, we can find the maximum SGV score $s^{*}$: 
 \begin{equation}
-  v^{*} = \argmax_{v} v^T M v \quad, \quad
-  s^{*} = v^{*T} M v^{*}
+  \mathbf{v^{*}} = \argmax_{\mathbf{v}} \mathbf{v}^T \mathbf{M} \mathbf{v} \quad, \quad
+  s^{*} = \mathbf{v}^{*T} \mathbf{M} \mathbf{v}^{*}
 \end{equation}
-where $v$ is the eigenvector of the largest eigenvalue of $M$. The SGV score $s$ is then used to verify the quality of the feature matches.
+where $\mathbf{v}$ is the eigenvector of the largest eigenvalue of $\mathbf{M}$. The SGV score $s$ is then used to verify the quality of the feature matches.
 
-The author of Logg3dNet proposed SGV check for reranking top-$k$ candidates obtained from descriptor distance matching in \secref{subsubsec:loop-candidate}. But, instead we used SGV for verifying registration quality against baseline distance. \figref{fig:sgv_distance} shows the SGV score computed against the distance between two point clouds. We used SGV score as an indication of baseline distance of loop candidates. For example, we set $s=0.1$ as a threshold for \SI{10}{\meter} baseline distance, and reject the loop candidates if SGV score is smaller than 0.1.
+The author of Logg3dNet proposed SGV check for re-ranking top-$k$ candidates obtained from descriptor distance matching in \secref{subsubsec:loop-candidate}. But, instead we used SGV for verifying registration quality against baseline distance. \figref{fig:sgv_distance} shows the SGV score computed against the distance between two point clouds. We used SGV score as an indication of baseline distance of loop candidates. For example, we set $s=0.1$ as a threshold for \SI{10}{\meter} baseline distance, and reject the loop candidates if SGV score is smaller than 0.1.
 
 
 
@@ -148,63 +148,84 @@ Lastly, we carry out a \emph{loop closure cycle consistency} verification (\figr
 If this difference is more than a threshold of \SI{10}{\centi\meter} or \SI{1}{\degree} we reject the candidate. This is shown in \figref{fig:cycle-consistency}, the interpretation of these transformations change depending on operation modes: online SLAM (\secref{sec:online_slam_mode}), offline multi-mission SLAM (\secref{sec:offline}), or pure relocalization (\secref{sec:relocalization}). However, the main idea remains the same: to verify if two successive loop candidates are consistent across different frames (Alg.\ref{alg:pairwise_cycle_check} shows pseudocodes of pairwise cycle consistency check when implemented).
 
 
+
+
 \begin{algorithm}[htbp]
-  \caption{Pairwise Cycle Check between two consecutive loop closures: $\Delta\mathbf{T}_{t-1}$, $\Delta\mathbf{T}_{t}$ }    
+  \DontPrintSemicolon
+  \SetAlgoLined
+  \SetNoFillComment
+  \LinesNotNumbered 
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+  
+  \Input{$\Delta\mathbf{T}_{t}$ current loop closure}
+  \Output{success or failure of the cycle consistency check}
+
+  % Comments describing the algorithm steps
+  \tcp{$n_i, n_j, n_k, n_l$: Nodes} 
+  \tcp{$\Delta\mathbf{T}_{t-1}$: Previous loop closure}
+  \tcp{$fails$: Number of consecutive fails}
+  
+  \BlankLine
+  
+  \SetKw{KwInit}{Initialize:}
+  \SetKw{KwFunc}{Function}
+  \SetKw{KwRead}{Read }
+  \SetKw{KwCompute}{Compute }
+  \SetKw{KwSet}{Set }
+  
+  \KwInit $n_i, n_j, n_k, n_l $ \\
+  $fails \gets 0 $ \\
+  
+  \BlankLine
+  \KwFunc{Pairwise Cycle Consistency Check}{
+
+  \BlankLine
+  \tcc{Check if it's the first loop closure}
+  \eIf{$\Delta\mathbf{T}_{t-1}$ is None}{
+      $\Delta\mathbf{T}_{t-1} \gets \Delta\mathbf{T}_{t} $ \\
+      \KwRet $fail$ 
+      \BlankLine
+  }{
+      $\Delta\mathbf{T}_{i,j} \gets \KwRead Edge(i,j)$ \\
+      $\Delta\mathbf{T}_{j,k} \gets \KwRead Current LoopClosure(\Delta\mathbf{T}_{t})$ \\
+      $\Delta\mathbf{T}_{l,i} \gets \KwRead Past LoopClosure(\Delta\mathbf{T}_{t-1})$ \\
+      $\Delta\mathbf{T}_{k,l} \gets \KwCompute Edge(j,k)$ \\
+      
+      \BlankLine
+      $\textbf{Err}(\Delta\mathbf{R}| \Delta\mathbf{t}) \gets \| \mathbf{I} - \Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i} \| = [ \Delta\mathbf{R}| \Delta\mathbf{t}]$ \\
+      
+      \BlankLine
+      \tcc{Check if loop closure is consistent}
+      \BlankLine
+      \eIf{$ \textbf{Err}(\Delta\mathbf{R}| \Delta\mathbf{t}) < threshold $ }{
+          \KwSet $fails \gets 0$ \\
+          \KwSet $\Delta\mathbf{T}_{l,i} \gets \Delta\mathbf{T}_{t-1}$ \\
+          \KwRet $success$ 
+          \BlankLine
+      }{
+        \BlankLine
+        \tcc{Too many fails, reset}
+        \eIf{$fails > \text{max\_fails}$}{
+            \KwSet $fails \gets 0$ \\
+            \KwSet $\Delta\mathbf{T}_{t-1} \gets \Delta\mathbf{T}_{t}$ 
+        }{
+            $fails \gets +1$ \\
+        }
+          \KwRet $fail$ 
+          \BlankLine
+      }
+  }
+  }
+  \caption{Pairwise Cycle Consistency Check: $\Delta\mathbf{T}_{t-1}$, $\Delta\mathbf{T}_{t}$ }    
   \label{alg:pairwise_cycle_check}
-
-  \begin{algorithmic}[1]
-   
-    % \State \textbf{Inputs:} $\Delta\mathbf{T}_{t-1}, \Delta\mathbf{T}_{t}$
-
-    \State \textbf{Initialize:  $n_i, n_j, n_k, n_l,\Delta\mathbf{T}_{t-1} $} 
-    \State $fail\_counter = 0 $
-    % \State $n_i \gets \text{ReadPastOdomPose , $^{Odom}T_{t-1}$}$
-    % \State $n_j \gets \text{ReadCurrentOdomPose ,  $^{Odom}T_{t}$}$
-    % \State $n_k \gets \text{ReadMapPose  $^{Map}T_{i}$}$
-    % \State $n_l \gets \text{ReadMapPose  $^{Map}T_{j}$}$
-    \vspace{8pt} % Adjust the space as needed
-
-    \Function{Pairwise Cycle Check}{$\Delta\mathbf{T}_{t}$}
-    \If {\text{$\Delta\mathbf{T}_{t-1}$ is None}}  \Comment{//First Loop Closure}
-        \State $\Delta\mathbf{T}_{t-1} \gets \text{$\Delta\mathbf{T}_{t}$ }$
-        \State \textbf{return} False
-    \Else \Comment{//Check Cycle Consistency}
-        \State $\Delta\mathbf{T}_{i,j} \gets \text{ReadEdge($i$,$j$)}$
-        \State $\Delta\mathbf{T}_{j,k} \gets \text{GetCurrentLoopClosure, $\Delta\mathbf{T}_{t}$}$
-        \State $\Delta\mathbf{T}_{l,i} \gets \text{ReadPastLoopClosure, $\Delta\mathbf{T}_{t-1}$}$
-        \State $\Delta\mathbf{T}_{k,l} \gets \text{ComputeEdge($j$,$k$) }$
-        \State $\textbf{Err} = \left\| \identity - \Delta\mathbf{T}_{i,j}\, \Delta\mathbf{T}_{j,k}\, \Delta\mathbf{T}_{k,l}\, \Delta\mathbf{T}_{l,i} \right\|_2 = [ \Delta\mathbf{R}| \Delta\mathbf{t}]$
-        \vspace{8pt} % Adjust the space as needed
-
-       
-
-       \If { $ Check(\textbf{Err})\, succeed $} \Comment{//Publish Loop Closure, $\Delta\mathbf{T}_{t}$}
-          \State \textbf{set} $fail\_counter \gets 0$
-          \State \textbf{set} $\Delta\mathbf{T}_{l,i} \gets \text{$\Delta\mathbf{T}_{t-1}$ }$
-          \State \textbf{return} True
-        \vspace{8pt} % Adjust the space as needed
-        \Else { $ Check(\textbf{Err})\, failed $} \Comment{//Reject Loop Closure, $\Delta\mathbf{T}_{t}$}
-          \State $fail\_counter \gets fail\_counter + 1$
-          \vspace{8pt} % Adjust the space as needed
-            \If {$fail\_counter>max\_fails$} \Comment{//Reset $\Delta\mathbf{T}_{t-1}$}
-                \State \textbf{set}  $fail\_counter \gets 0$
-                \State \textbf{set}  $\Delta\mathbf{T}_{t-1} \gets \Delta\mathbf{T}_{t}$
-            \Else
-                \State $fail\_counter \gets +1$
-            \EndIf
-          \State \textbf{return} False
-
-      \EndIf 
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
 \end{algorithm}
 
 
 % 3. ICP 
 \subsection*{\textbf{Step 3: Fine Registration}}
 \label{subsubsec:fine-registration}
-Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp} for fine registration of the proposed candidates given prior registration from RANSAC. We use the \emph{libpointmatcher} implementation~\cite{pomerleau2013iros}, which also provides information on the quality of the registration, such as the proportion inlier points and the Residual Error of each point to access the alignment.
+Finally, we employ the Iterative Closest Point (ICP) algorithm~\cite{besl1992icp} for fine registration of the proposed candidates given prior registration from RANSAC. We use the \emph{libpointmatcher} implementation~\cite{pomerleau2013iros}, which also provides information on the quality of the registration, such as the proportion inlier points and the residual error of each point to access the alignment.
 % \mfallon{LibPM returns the residual error of each point. My code uses a threshold (20cm) to determine if a point is an inlier. This magic number is really undertuned}
 % this magic number of 20cm is very very important:
 % https://github.com/ori-drs/vilens/blob/develop/icp_odometry/icp_odometry/src/icp_odometry/registration_verification.cpp#L28
@@ -232,7 +253,7 @@ For the cycle consistency verification described in \secref{subsubsec:coarse-reg
 
 
 \section{Task B: Offline Multi-Mission SLAM}\label{sec:offline}
-Offline multi-mission SLAM addresses the challenge of merging multiple pose graph SLAM missions ${\mathcal{M}_{1, \ldots, n}}$, collected over time, with partly overlapping area. 
+Offline multi-mission SLAM addresses the challenge of merging multiple pose graph SLAM missions ${\mathcal{M}_{1, \ldots, n}}$, collected over time, with partly overlapping areas. 
 The goal is to find inter-mission loop candidates to construct a unified map in a common reference frame. This application is relevant for forestry applications, where it is required to map larger areas by integrating surveys conducted over multiple missions or campaigns.
 
 Unlike the scenario of on-road navigation, where similar routes (hence locations) are revisited, we considered off-road scenarios where the missions are collected in dense forests, where it is often unfeasible to retrace the same paths on each sequence. To avoid inefficiently retracing our steps, we wish to identify loop candidates when passing no closer than about \SI{10}{\meter}, providing the flexibility needed to merge two roughly overlapping missions.

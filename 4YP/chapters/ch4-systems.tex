@@ -3,7 +3,7 @@
 \section{Introduction}
 In this section, we will discuss the system setup and the implementations of our complete system including VILENS odometry, posegraph SLAM, and place recognition server for three different operating modes. First, we discuss the system setup used for collecting data. Next, the details of implementation will show how place recognition server integrated to our SLAM system under different modes: online SLAM, offline multimission SLAM map merging, and relocalization in ROS framework.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.4\columnwidth]{pics/setup_Frontier_pic2.png}
   \caption{Image of \emph{Frontier} comprising a LiDAR, IMU, three cameras, GPS and CPU board. }
@@ -12,14 +12,14 @@ In this section, we will discuss the system setup and the implementations of our
 
 \section{Hardware Setup}
 \label{sec:system_setup}
-Our system uses \emph{Frontier} device as main sensors which comprises a LiDAR, IMU, and three cameras (additionally GPS) shown in \figref{fig:frontier}. We used two types of \emph{Frointers}, \emph{Frointer-15} and \emph{Frointer-19} which contains Hesai XT-32 and Hesai QT-64 LiDAR respectively and the details of sensor specifications are summarized in \tabref{tab:sensors}. For different \emph{Frontier} devices, we modify configuration settings on both VILENS and VILENS SLAM (details in \cite{wisth2023tro,proudman2022ras}). For data collection, we mainly used human and legged robot platforms as shown in \figref{fig:system_setup}. We typically mapped the forest area in zig-zag patterns to cover up both forward and backward views. 
+We use a multi-sensor unit called \emph{Frontier}, which comprises a LiDAR, IMU, three cameras and onboard CPU computing (additionally GPS) shown in \figref{fig:frontier}. We used two types of \emph{Frontier}, \emph{Frontier-15} and \emph{Frontier-19} which contains Hesai XT-32 and Hesai QT-64 LiDAR respectively and the details of sensor specifications are summarized in \tabref{tab:sensors}. For different \emph{Frontier} devices, we modify configuration settings on both VILENS and VILENS SLAM (details in \cite{wisth2023tro,proudman2022ras}). For data collection, we mainly used human and legged robot platforms as shown in \figref{fig:system_setup}. We typically mapped the forest area in zig-zag patterns to cover up both forward and backward views. 
 
 
 
 \begin{table}[htbp]
   \centering
   \small
-  \caption{Sensor specifications of \emph{Frontier} device.}
+  \caption{Sensor specifications of \emph{Frontier} multi-sensor unit device.}
   \label{tab:sensors}
   \begin{tabular}{|c|c|>{\raggedright\arraybackslash}p{4.5cm}|}
       \hline
@@ -29,16 +29,18 @@ Our system uses \emph{Frontier} device as main sensors which comprises a LiDAR, 
       \cline{2-3}
       & \multirow{4}{*}{Hesai Pandar QT-64 (\emph{Frontier-19})} & \textbullet\, 10 Hz \newline \textbullet\, 360° × 104° FoV \newline \textbullet\, 0.6° × 1.45° Res. \newline \textbullet\, 0.1--60 m Range \\
       \hline
-      \multirow{4}{*}{Cameras} & \multirow{4}{*}{Sevensense, Alphasense} & \textbullet\, 40 Hz \newline \textbullet\, 126° × 92.4° FoV \newline \textbullet\, RGGB Bayer \newline \textbullet\, 1440×1080 pixels \\
+      \multirow{4}{*}{Cameras} & \multirow{4}{*}{Sevensense, Alphasense} & \textbullet\, 40 Hz \newline \textbullet\, 126° × 92.4° FoV \newline \textbullet\, RGGB Bayer Fisheye \newline \textbullet\, 1440×1080 pixels \\
       \hline
-      \multirow{2}{*}{IMU} & \multirow{2}{*}{Microstrain} & \textbullet\, 400 Hz \newline \textbullet\, Sync with cameras \\
+      \multirow{2}{*}{IMU} & \multirow{2}{*}{Bosch BMI085} & \textbullet\, 400 Hz \newline \textbullet\, 6-axis \\
+      \hline
+      \multirow{1}{*}{GNSS} & \multirow{1}{*}{U-blox} & \textbullet\, CNR:30-50 dB  \\
       \hline
   \end{tabular}
 \end{table}
 
 
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.80\columnwidth]{pics/setup_4yp_platform_fig3.pdf}
   \caption{Platform setup for forest mapping. Backpack (shown in left) with \emph{Frontier} mounted for a human mapping scenario, and a legged robot (shown in right) for forest surveying and monitoring applications.}
@@ -50,7 +52,7 @@ Our system uses \emph{Frontier} device as main sensors which comprises a LiDAR, 
 \label{sec:implementation}
 \subsection{Robotic Operating System (ROS) Framework}
 The Robot Operating System (ROS) is a flexible framework for developing software for robotics applications shown in \figref{fig:implementation_ros}. One of the key concepts in ROS is the publisher-subscriber model, where nodes (independent processes) communicate by publishing messages on topics and subscribing to messages on those topics. Publishers broadcast data, such as sensor readings or robot state information, while subscribers receive and process these data. The nodes and published topics then estalbish a network that represents the data sharing; this can be visualized with ROS tools such as \emph{rqt graph} in \figref{fig:implementation_ros}. Additionally, ROS facilitates communication between nodes through service calls and servers. Services allow nodes to request specific tasks or information from one another, where the client sends a request message and the server responds accordingly, enabling more complex interactions beyond simple message passing shown in service call box in \figref{fig:implementation_ros}. This modular and distributed architecture of ROS makes it well-suited for building modular and scalable robotic systems. 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{pics/Implementation_ros_framework2.png}
   \caption{ROS Framework. Nodes are shown in red elipses, published topics are shown in blue boxes. Additionally, we also define service call, a client node requests a specific service message and a server node responses a service message based on request. Edges are connections between nodes. We will follow \emph{rqt graph} convention to visualise ROS nodes and topics throughout this section.}
@@ -58,45 +60,45 @@ The Robot Operating System (ROS) is a flexible framework for developing software
 \end{figure}
 
 \subsection{Online SLAM}
-This is a basic setup for single mission SLAM. Previosuly, place recognition model \emph{Scan Context}, was directly integrated inside VILENS SLAM. But now, place recognition server, is integrated as a separate module and we can call different place recognition models from a new script which provides a ROS node (shown in \figref{fig:implementation_online_slam} called \emph{place recognition logg3dnet}). The place recognition server subscribes LiDAR scan and pose graph topics from VILENS SLAM. The place recognition server then publishes service messages to VILENS SLAM node. Service message contains loop candidate ids and their relative transformation. The overall online SLAM nodes and topics used are shown in \figref{fig:implementation_online_slam}. 
-It works followings: When most recent LiDAR scan and posegraph are available in VILENS SLAM, place recognition node subscribes those topics and call place recnition server to extract descriptors and verify the candidates in database in \secref{ch:methods}. And then it publishes loop candidates service message back to VILENS SLAM. 
+This is a basic setup for single mission SLAM. Previosuly, place recognition model \emph{Scan Context}, was directly integrated inside VILENS SLAM. But now, place recognition server acts like a separate module and shown as a ROS node in \figref{fig:implementation_online_slam} . The place recognition server subscribes LiDAR scan and pose graph topics from VILENS SLAM. The place recognition server then publishes service messages to VILENS SLAM node. Service message contains loop candidate ids and their relative transformation. The overall online SLAM nodes and topics used are shown in \figref{fig:implementation_online_slam}. 
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.99\columnwidth]{pics/Implementation_Online_SLAM_redraw3.pdf}
-  \caption{Online SLAM Implementation (ROS rqt graph). VILENS odometry (shown in grey) and VILENS SLAM (shown in green) are our base system. The place recognition node (shown in red) subscribe topics(shown in blue) from VILENS SLAM node. Then it publishes service messages to VILENS SLAM node if loop candidates are fully verfied. Service message contains loop candidates ids and their relative transformation.}
+  \caption{Online SLAM Implementation. When most recent LiDAR scan and posegraph are available in VILENS SLAM, place recognition server node subscribes those topics then publish loop candidates to VILENS SLAM.  }
   \label{fig:implementation_online_slam}
 \end{figure}
 
 
 \subsection{Offline Multi-mission SLAM Map Merging}
-Offline Multi-mission SLAM maps merging is simplely done by  service call between VILENS SLAM Offline node and place recognition server node. From VILENS SLAM Offline node individual point clouds, cloud id of a mission and pose graph can be used as input to place recognition server node. The place recognition server node builds the database incrementally mission by mission. Then, when it finds loop closures it service calls back to VILENS SLAM Offline node. The overall offline multimission SLAM nodes and topics used are shown in \figref{fig:implementation_offline_slam}.  
+Offline Multi-mission SLAM maps merging is simplely done by service call between VILENS SLAM Offline node and place recognition server node. From VILENS SLAM Offline node individual point clouds, cloud id of a mission and pose graph can be used as input to place recognition server node. The place recognition server node builds the database incrementally mission by mission. Then, when it finds loop closures it service calls back to VILENS SLAM Offline node. The overall offline multimission SLAM nodes and topics used are shown in \figref{fig:implementation_offline_slam}.  
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.99\columnwidth]{pics/Implementation_Offline_SLAM_redraw_2.pdf}
-  \caption{}
+  \caption{Offline Multi-mission SLAM Map Merging Implementation. For each mission, every input point clouds is passed to place recognition server node to find loop closures. Then place recognition server node service calls back to VILENS SLAM Offline node.}
   \label{fig:implementation_offline_slam}
 \end{figure}
 
 
 \subsection{Relocalization}
-Relocalization showcases of how to use place recognition server for relocalization. As shown in \figref{fig:implementation_relocalization}, VILENS SLAM replaced by place recognition client node which stores all the prior map of individual point clouds, posegraph and descriptors. Simillar to Online SLAM mode, place recognition server node provides loop closures message to place recognition client node. The place recognition client node then relocalize the current robot's pose based on the loop closure message for visualisation. 
-In order to visualise the pose of the robot continuously, we need to compute tf trees between \emph{map} and \emph{odom} shown in \figref{fig:implementation_relocalization_tf}. Once loop closures are verified from place recognition server, we can compute transformation between \emph{map} and \emph{base}. Then from VILENS odometry, we access tf between \emph{base} and \emph{odom}. Then we compute transformation between \emph{map} and \emph{base} then publish as tf messange. Now this verified tf is synchronised with VILENS odometry to visualise the pose of the robot. Anytime new loop closures are verified, we change current tf between \emph{map} and \emph{odom} and republish as tf message. 
+Relocalization showcases of how to use place recognition server for relocalization. As shown in \figref{fig:implementation_relocalization}, VILENS SLAM is now replaced by place recognition client node which stores all the prior map of individual point clouds, posegraph and descriptors. Simillar to Online SLAM mode, place recognition server node provides loop closures message to place recognition client node, except there is no pose grpah optimization. The place recognition client node then relocalize the current robot's pose based on the loop closure message for visualisation. 
 
-Lastly, we implemented virtual rendering of tree models using OpenGL (GPU accelerated) library for real-time visualisation of both camera images and virtual tree models. 
-\begin{figure}[t]
+In order to visualise the pose of the robot continuously, we need to compute tf trees between \emph{map} and \emph{odom} shown in \figref{fig:implementation_relocalization_tf}. TF tree is a hierarchical structure that manages coordinate frame transformations in ROS. This follows two steps: when loop closures are verified from place recognition server, we can compute transformation between \emph{map} and \emph{base}. Then from VILENS odometry, we access tf between \emph{base} and \emph{odom}. Then we compute transformation between \emph{map} and \emph{base} then publish as tf messange. Now this verified tf is synchronised with VILENS odometry to visualise the pose of the robot. Anytime new loop closures are verified, we change current tf between \emph{map} and \emph{odom} and republish as tf message. 
+This enables virtual rendering of tree models using OpenGL library for real-time visualisation of both camera images and virtual tree models which will be shown in \secref{sec:exp_relocalization}. 
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.99\columnwidth]{pics/Implementation_Relocalization_redraw_3.pdf}
-  \caption{Relocalization (ROS rqt graph). Relocalization demonstrates a }
+  \caption{Relocalization implementation. Simillar to Online SLAM mode, place recognition server node provides loop closures message to place recognition client node. The place recognition client node then continuously publish tf to relocalize the current robot's pose in map frame. Finally, robot pose, camera images and virtual tree models are visualised in visualization node.}
   \label{fig:implementation_relocalization}
 \end{figure}
 
 
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.99\columnwidth]{pics/impelementation_relocalization_tf.png}
-  \caption{Tf tree for relocalization. Tf between \emph{map} and \emph{odom} should be connected from place recognition server node.}
+  \includegraphics[width=0.99\columnwidth]{pics/implementation_tf_trees4.pdf}
+  \caption{Tf tree in relocalization mode. Tf between \emph{map} and \emph{odom} should be connected by two steps. First, getting tf between \emph{map} and \emph{base} from place recognition server then use most recent tf \emph{base} and \emph{odom} from VILENS odometry to compute target tf between \emph{map} and \emph{odom}.}  
   \label{fig:implementation_relocalization_tf}
 \end{figure}
