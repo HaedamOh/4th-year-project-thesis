@@ -3,32 +3,32 @@
 
 \begin{figure}
     \includegraphics[width=\linewidth]{pics/header.png}
-    \captionof{figure}{Place recognition in dense forest environments using a backpack-mounted LiDAR and legged robot equipped with LiDAR. Right: Illustration of loop closure detection within a deeply forested area, with offset distance of 9.2 meters and orientation of 56 degrees between the matched scans. White lines indicate some corresponding locations in the two point clouds (but no actual corresponces are used).
+    \captionof{figure}{Place recognition in dense forest environments using a backpack-mounted LiDAR and legged robot equipped with LiDAR. Right: An example of loop closure detection within a deeply forested area, with offset distance of 9.2 meters and orientation of 56 degrees between the matched scans. White lines indicate some corresponding locations in the two point clouds (but no actual correspondences are used).
     }
     \label{fig:motivation}
 \end{figure}
 
 \subsection*{Motivation}
-Place recognition is an essential capability used to minimize the drift in the pose estimate produce by a Simultaneous Localization and Mapping (SLAM), as well as to re-localize in previously mapped areas. 
-LiDAR-based place recognition systems have demonstrated robustness by effectively capturing scene structure while showing low susceptibility to visual changes, making them suitable for long-term navigation. 
-Previous methods have primarily focused on the problem of autonomous driving in urban environments (characterized by long linear sequences), with their efficacy in natural settings much less tested.
+Place recognition is an essential capability used to correct for the effect of pose estimation drifts suffered by a Simultaneous Localization and Mapping (SLAM) system. It can also be used to re-localize in previously mapped areas. 
+LiDAR-based place recognition systems have demonstrated robustness by effectively capturing scene structure while being insusceptible to visual changes or minor structural changes, making them suitable for long-term navigation. 
+Previous methods have primarily focused on the problem of autonomous driving in urban environments (which is characterized by long linear sequences), with their efficacy in natural settings much less tested.
 %\mfallon{Wildplaces dataset is a counter example of this.} 
-Recent ongoing applications in natural environments, including agriculture, environmental monitoring, conservation, and search and rescue, highlight the significance of extending research efforts beyond urban landscapes.
+There are emerging applications of robots and autonomous systems in natural environments, including agriculture, environmental monitoring, conservation, and search and rescue, highlight the significance of extending research efforts beyond urban landscapes.
 
 \subsection*{Challenges in natural environments}
 % Why natural environment 
-Despite the advancements of LiDAR-based place recognition in urban areas, its application in unstructured natural environments like forests presents several notable challenges. 
+Despite the advancements of LiDAR-based place recognition in urban areas, its application in unstructured natural environments like forests with their irregular structures such as trees and bushes presents several notable challenges. 
 Firstly, natural environments are irregular structures like trees, which not only lack fine structure but also undergo seasonal changes, affecting their shape and density over time. This complicates the creation of consistent geometric representations crucial for accurate place recognition.
-Secondly, a limited field of view and occlusions of a LiDAR sensor pose a loss of information. In large-scale natural environments, LiDAR sensors often struggle to capture the complete vertical extent of the environments. 
-This issue is particularly common in areas with tall, cluttered trees.  Undulating terrains and dense trees cause occlusions resulting in incomplete scans of a LiDAR sensor. 
-Lastly, unique, undefined trajectories or paths when exploring dense forests pose another challenge: a place recognition capability of identifying its location not exctly at the same visited place but 'near by' location. 
+Secondly, a limited field-of-view and occlusions of a LiDAR sensor result in a loss of information. In large-scale natural environments, LiDAR sensors often struggle to capture the complete vertical extent of the environments. 
+This issue is particularly common within areas populated by mature plantations of tall trees. Undulating terrains and dense trees cause occlusions causing the scans produced by LiDAR sensor to be incomplete.
+Lastly, trajectories which do not follow defined roads or pathways when exploring dense forests pose another challenge: a place recognition capability of recognizing the sensors' location when not precisely revisiting a known location but passing merely 'near by' location. 
 
 
 %%%%%%%%%%%%%%%%%%%
 %% WHICH PROBLEM
 % Second, explain WHICH problem you are solving/address to solve: Compare WildPlace  
 \subsection*{Objectives}
-Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by hand-held spinning LiDAR, capturing seasonal changes within the forest. The dataset was used to evaluate different state-of-the-art place recognition models in forest environments focusing on localization tasks along the access roads of a national park. The main outcome of their work was that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, without the strong structural cues that access roads provide roads. Additionally we are also interested in testing the accuracy of precise 6DoF pose estimation for forestry or biodiversity monitoring applications.
+Recently, the Wild-Places dataset \cite{knights2023icra} has been made available. In it a large-scale forest dataset was captured by using hand-held spinning LiDAR, which captured seasonal changes within the forest. The dataset was used to evaluate state-of-the-art learning-based and handcrafted place recognition models in forest environments focusing on localization task. The dataset was limited to the access roads of an Australian national park. The main outcome was the demonstration that learning-based descriptors such as Logg3dNet \cite{vidanapathirana2022icra} showed better performance compared to handcrafted methods such as ScanContext \cite{kim2018iros}. While the findings suggested that LiDAR-based methods could provide a solution for place-based localization in forest environments, it was not conclusive if the results transferred to dense forest areas, especially those lacking strong structural cues like access roads. We are also interested in going further and incorporating the pipeline in precise 6DoF pose estimation and testing it in various operational modes for forestry or biodiversity monitoring applications.
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -47,7 +47,8 @@ Recently, the Wild-Places dataset \cite{knights2023icra} has been made available
 % Always start that paragraph with: ``The main contribution of this paper is''
 \subsection*{Contributions}
 
-In this work, we present an evaluation of place recognition models to dense forest environments. We employ different LiDAR sensors with sequences recorded with backpack-mounted devices or mobile robots, such as legged platforms, to perform a rigorous analysis of existing learning-based and handcrafted LiDAR place recognition systems. Further, we present a LiDAR-based SLAM system to assess the proposed loop-closure pairs and subsequently validate them through fine-registration in both online and offline modes. Finally, we demonstrate the approach being use for a purely relocalization task, wherein the system continuously localizes its position within a prior point cloud map made up of individual LiDAR scans.
+In this work, we present an evaluation of place recognition models to dense forest environments. We employ different LiDAR sensors with sequences recorded with backpack-mounted devices and on a quadruped mobile robot to perform a rigorous analysis of existing learning-based and handcrafted LiDAR place recognition systems. Further, we present a LiDAR-based SLAM system to assess the proposed loop-closure pairs and subsequently validate them through fine-registration in both online and offline modes. Finally, we demonstrate the approach being used for a purely relocalization task, wherein the system continuously localizes its position within a prior point cloud map made up of individual LiDAR scans.\\
+In summary, the contributions of this thesis are:
 
 % \mfallon{Note: alternatively you could simply localise in a single giant point cloud of the forest - if you knew the starting point - but that would not scale well. But it would work!}
 
@@ -56,16 +57,16 @@ In this work, we present an evaluation of place recognition models to dense fore
 % Explicitly(!) state your claims in one (short) paragraph and make
 % sure you pick them up again in the experiments and support every claim.
 
-In summary, the contributions of this thesis are:
 \begin{itemize}
+\setlength{\itemsep}{0pt}
 
 \item Evaluation of the performance of four LiDAR place recognition models, both handcrafted and learning-based, in dense forest environments.
 
-\item Analyzis of loop-closure performance as a function of the relative distance and orientation between candidate loop pairs.
+\item Analysis of loop-closure performance as a function of the relative distance and orientation between candidate loop pairs.
 
-\item Demonstration of the best performing method in online/single-session and offline/multi-session SLAM modes, as well as in relocalization tasks for forest inspection in a prior environment map. 
+\item Integration of the best performing method in online/single-session and offline/multi-session SLAM modes, as well as in relocalization tasks for forest inspection in a prior environment map. 
 
-\item Release of our dense forest datasets with ground truth, collected with a backpack-mounted LiDAR across three different countries\footnote{Our datasets will be published at \url{https://ori.ox.ac.uk/labs/drs/datasets-drs/}} 
+\item Release of our dense forest datasets with ground truth, collected with a backpack-mounted LiDAR in Finland, Switzerland and the UK.\footnote{Our datasets will be published at \url{https://ori.ox.ac.uk/labs/drs/datasets-drs/}} 
 \end{itemize}
 
 
