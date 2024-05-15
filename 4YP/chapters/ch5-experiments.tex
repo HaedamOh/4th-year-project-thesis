@@ -2,20 +2,21 @@
 \label{chapter:experiments} 
 
 % \section{Experimental Evaluation Overview}\label{sec:exp}
-In this section, we rigorously evaluate our place recognition pipeline to assess its performance in dense forest environments. Our evaluation includes four distinct test sites featuring varying forest compositions: Evo (Finland) characterized by coniferous trees; Stein-Am-Rhein (Switzerland) Wytham Woods (UK) and Forest of Dean (UK) containing both broad-leaf and coniferous tree species. We evaluate all three operational modes of our system: Online SLAM, Offline Multi-Mission SLAM, and Relocalization.
+In this section, we rigorously evaluate our place recognition pipeline to assess its performance in dense forest environments. Our evaluation includes four distinct test sites featuring varying forest compositions: Evo (Finland) is characterized by coniferous trees while Stein-Am-Rhein (Switzerland), Wytham Woods (UK) and Forest of Dean (UK) contain both broad-leaf and coniferous tree species. We evaluate all three operational modes of our system: Online SLAM, Offline Multi-Mission SLAM, and Relocalization.
 % We can remove the summary of experiments to save space if needed
 The experiments conducted are as follows:
 \begin{enumerate}[label=\Roman*.]
-  \item Evaluation of four different place recognition models at the descriptor-level, tested across multiple forest environments with different LiDAR setups. (\secref{sec:exp_desc_analysis}) 
+  \listparindent=-20pt
+  \item Evaluation of four different place recognition methods at the descriptor-level, tested across multiple forest environments with different LiDAR setups. (\secref{sec:exp_desc_analysis}) 
   \item Performance assessment during both online and offline SLAM operations within dense forest settings. (\secref{sec:exp_online_slam} \& \secref{sec:offline_multi_mission}).
-  \item Analysis of successful loop closures, based on baseline distance and orientation differences. (\secref{sec:exp_online_slam})
-  \item Demonstration of the relocalization application in a previously mapped forest environment, showcasing its utility in an inspection task performed by a quadruped robot. (\secref{sec:exp_relocalization})
+  \item Analysis of successful loop closures, based on the baseline distance and orientation differences between the two candidate scans. (\secref{sec:exp_online_slam})
+  \item Demonstration of the application of relocalization in a previously mapped forest environment, showcasing its utility in an inspection task performed by a quadruped robot. (\secref{sec:exp_relocalization})
 \end{enumerate}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{pics/exp_0_missions_dataset.pdf}
-  \caption{Illustrative examples of four forests used in the experiments. From top left to bottom right: Evo (Finland, May), Stein am Rhein (Switzerland, Sep), Wytham Woods (UK, Feb), and Forest of Dean (UK, March). The datasets were collected using backpack-LiDAR systems across different seasons and forest types.}
+  \caption{Illustrative examples of four forests used in the experiments. From top left to bottom right: Evo (Finland, May), Stein am Rhein (Switzerland, Sep), Wytham Woods (UK, Feb), and Forest of Dean (UK, March). The datasets were collected using backpack-carried LiDAR systems across different seasons and forest types.}
   \label{fig:missions_dataset}
 \end{figure}
 
@@ -23,89 +24,72 @@ The experiments conducted are as follows:
 % First experiment: descriptors
 \section{Place Recognition Descriptors}
 \label{sec:exp_desc_analysis} 
-In this experiment, we evaluated the descriptors of four different place recognition models (Logg3dNet, EgoNN, ScanContext, STD) focusing on their ability to accurately capture loop-candidates in forest environments. Logg3dNet and EgoNN models are learning-based methods and were pre-trained on the Wild-Places dataset. 
-\subsection*{Datasets}
-We collected the dataset with two different LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai QT64  as discussed in previous \secref{sec:system_setup}. Note that Wild-Place\cite{knights2023icra} dataset was collected using a inclined VLP-16 LiDAR mounted on spinning motor. This enabled capturing the canopy of the forest, which is difficult for our backpack LiDAR setup. Below summarises the characteristic of different forests:
-\begin{itemize}
-  \item \textbf{Evo:} Evo dataset was collected in forests in Finland. The dataset was collected in May using the Hesai XT32 LiDAR sensor. The forest is characterized by tall coniferous trees with medium tree density.
-  
-  \item \textbf{Stein am Rhein:} Stein am Rhein dataset was collected in a forest in Switzerland in October. The dataset was collected using the Hesai XT32 LiDAR sensor. It displays mixed species and bushes with a low tree density.   
-
-  \item \textbf{Wytham Woods:} Wytham Woods dataset was collected in a densely wooded area in the UK in February. The dataset was collected using the Hesai QT64 LiDAR sensor. It is characterized by a high tree density with complex terrains featuring hills and valleys.
-  
-  \item \textbf{Forest of Dean:} Forest of Dean dataset was collected in a forest in the UK in March. The dataset was collected using the Hesai QT64 LiDAR sensor. The dataset displays a sparser plantation with a low tree density. 
-
-  \item \textbf{Wild-Place:} Wild-Place dataset was collected in a forest in Australia over different seasons. The dataset was collected using a VLP-16 LiDAR sensor mounted on a spinning motor. The trajectories were along the open access roads and the forest canopy was captured. The dataset is characterized by a low tree density.  
-\end{itemize}
-
-% \begin{table}[ht]
-%   \centering
-%   \label{tab:lidar_specs}
-%   \begin{tabular}{|p{2.5cm}|p{2cm}|p{2.3cm}|p{2.3cm}|c|}
-%     \hline
-%     \centering \textbf{Location} & \centering  \textbf{LiDAR} & \centering  \textbf{Field of View (\textdegree)} &\centering  \textbf{Effective Range (m)} & \textbf{Tree Density} \\
-%     \hline
-%     \centering Wild-Place & \centering VLP-16 & \centering 30  & \centering 50 & Low \\
-%     \hline
-%     \centering Evo &  \centering XT32 &\centering 30 &\centering 50 & Medium \\
-%     \hline
-%     \centering Stein am Rhein &\centering  XT32 & \centering 30 & \centering 50 & Low \\
-%     \hline
-%     \centering Wytham Woods &\centering  QT64 &\centering 100 &\centering 30 & High \\
-%     \hline
-%     \centering Forest of Deans &\centering QT64 &\centering 100 &\centering 30 & Low \\
-%     \hline
-%   \end{tabular}
-% \caption{Datasets and LiDAR specifications.}
-% \end{table}
-
+In this experiment, we evaluated the descriptors of four different place recognition models (Logg3dNet, EgoNN, ScanContext, STD) focusing on their ability to accurately capture loop-candidates in forest environments. Logg3dNet and EgoNN models are learning-based methods, which were pre-trained on the Wild-Places dataset.
 
 \begin{table}[htbp]
   \centering
-  \caption{Evaluation results for a sequence of datasets.  Abbreviations used are as follows: Avg (Average),Desc (Descriptor evaluation), Online (Online SLAM), Offline (Offline multimission), Reloc. (Relocalization), Indiv. (Individual), Indiv.pc (Individual point clouds) }
+  \caption{Summary statistics of evaluation datasets. Abbreviations used are as follows: Avg (Average),Desc (Descriptor evaluation), Online (Online SLAM), Offline (Offline multimission), Reloc. (Relocalization), Indiv. (Individual), Indiv.pc (Individual point clouds), tree density is roughly estimated by counting the average number of distinct trees within a \SI{7}{\meter} radius from the center of the sensor then scaled up to per hectare.} 
   \label{tab:eval_sequence}
   \small
   \centering
   \begin{tabular}{>{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm} >{\centering\arraybackslash}m{1.5cm}>{\centering\arraybackslash}m{1.5cm}}
   \toprule
-  \textbf{Dataset}  & \textbf{Eval Modes} & \textbf{Avg. Mapping area(ha)} & \textbf{Avg. Duration (min)} & \textbf{Avg. \#Indiv. pc}  & \textbf{Avg. \#points per indiv.pc} &\textbf{Missions name} \\
+  \textbf{Dataset}  & \textbf{Eval Modes} &\textbf{Missions name} & \textbf{Avg. Mapping area(ha)} & \textbf{Avg. Duration (min)} & \textbf{Avg. \#Indiv. pc}  & \textbf{Avg. \#points per indiv.pc} & \textbf{Avg. \#trees per hectare} \\
   \midrule
-  Evo  & Desc. Online. Offline. & 0.74 ha   & 24 min & 969 &  110k & exp16 exp18 \\
+  Stein am Rhein  & Desc. & exp03 & 0.27 ha & 13 min & 363 &  120k & 220  \\
   \midrule
-  Stein am Rhein  & Desc. & 0.27 ha & 13 min & 363 &  120k & exp03 \\
+  Wild-Place & Desc. & K-04 & Perimeter 3.17km  & 48 min & 5805 & 300k & 270 \\
   \midrule
-  Wytham Woods & Desc. Online. Offline.  & 1.2 ha & 22 min& 707 & 55k & C D E F \\
+  Evo  & Desc. Online. Offline. & exp16 exp18 & 0.74 ha   & 24 min & 969 &  110k  & 500 \\
   \midrule
-  Forest of Deans & Online. Offline. Reloc. & 0.45 ha  & 17 min & 649 & 50k & exp01 exp02 exp03 \\
+  Wytham Woods & Desc. Online. Offline. & C D E F  & 1.2 ha & 22 min& 707 & 55k & 900 \\
   \midrule
-  Wild-Place & Desc. & Perimeter 3.17km  & 48 min & 5805 & 300k & K-04\\
+  Forest of Deans & Online. Offline. Reloc. & exp01 exp02 exp03 & 0.45 ha  & 17 min & 649 & 50k & 130 \\
   \bottomrule
   \end{tabular}
 \end{table}
 
-\subsection*{Precision-Recall Curves}
-Precision-recall curves (See \figref{fig:pr_curves}) show how accurately (precision) and frequently (recall) each  model detects correct loop candidates within a reasonable distance threshold (here set to 10\,m) at various descriptor thresholds $\tau_{s}$ in four different forests. Among positive candidates   (whose descriptor distance < $\tau_{s}$ ), we classify them into true positive (\emph{TP}) and false positive (\emph{FP}) depending on whether the candidate is actually located within the loop-closure distance threshold, 10 meter. 
-Similarly, among negative candidates, we classify them into true negative (\emph{TN}) and false negative (\emph{FN}) depending on their true location. 
-\[ \text{Precision} = \frac{TP}{TP + FP} \quad \quad \text{Recall} = \frac{TP}{TP + FN} \quad \quad \text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \]
 
-From the precision-recall curves (\figref{fig:pr_curves}), it is evident that Logg3dNet consistently outperforms the other models across the four different forests. Particularly, on the Evo and Stein am Rhein datasets, where a longer range with narrow field of view Hesai XT32 LiDAR was employed, Logg3dNet showed the best performance both in terms of precision and recall, without experiencing any sudden drops in precision.
-In contrast, ScanContext demonstrates a significant decrease in precision, attributed to a limited vertical field of view of LiDAR sensor. In more challenging scenarios such as Wytham Woods characterized by complex terrains featuring hills and valleys with dense tree clutter captured with a wide field of view QT64 LiDAR, handcrafted models show a notable decline in performance. However, Logg3dNet remains robust, successfully retrieving a substantial portion of correct loop-candidates, achieving a 70\% precision at a 50\% recall rate. 
+\subsection*{Datasets} 
+We collected the dataset with two different types of LiDAR sensors mounted on a backpack: Hesai XT32 and Hesai QT64  as discussed in previous \secref{sec:system_setup}. Note that Wild-Place\cite{knights2023icra} dataset was collected using an inclined VLP-16 LiDAR mounted on a continuously spinning motor. This enabled the capture of the canopy of the forest, which is difficult for our backpack LiDAR setup. In the following we summarize the characteristic of the different forests:
+\begin{itemize}
+  % \setlength\itemsep{-0.1em}
+  \item \textbf{Stein am Rhein:} Stein am Rhein dataset was collected in a forest in Switzerland in October 2023. The dataset was collected using the Hesai XT32 LiDAR sensor. It displays mixed species and bushes with a low tree density.
+  \item \textbf{Wild-Place:} Wild-Place dataset is open-source forest dataset which was collected by the Australian research team in forests in Australia over different seasons. The dataset was collected using a VLP-16 LiDAR sensor mounted on a spinning motor. The trajectories were along the open access roads and the forest canopy was captured. The dataset is characterized by a low tree density.
+  \item \textbf{Evo:} Evo dataset was collected in forests in Finland. The dataset was collected in May 2023 using the Hesai XT32 LiDAR sensor. The forest is characterized by tall coniferous trees with medium tree density.
+  \item \textbf{Wytham Woods:} Wytham Woods dataset was collected in a densely wooded area in the UK in February 2024. The dataset was collected using the Hesai QT64 LiDAR sensor. It is characterized by a high tree density and with complex terrains featuring hills and valleys.  
+  \item \textbf{Forest of Dean:} Forest of Dean dataset was collected in a forest in the UK in March 2024. The dataset was collected using the Hesai QT64 LiDAR sensor. The dataset displays a sparser plantation with a low tree density.
+
+\end{itemize}
+
+
+\subsection*{Precision-Recall Curves}
+Precision-recall curves (See \figref{fig:pr_curves}) show how accurately (precision) and frequently (recall) each  model detects correct loop candidates within a reasonable distance threshold (here set to 10\,m) at various descriptor thresholds $\tau_{s}$ in four different forests. Among positive candidates   (whose descriptor distance < $\tau_{s}$ ), we classify them into true positive (\emph{TP}) and false positive (\emph{FP}) depending on whether the candidate is actually located on their ground truth location within the loop-closure distance threshold, 10 meters. 
+Similarly, among negative candidates, we classify them into true negative (\emph{TN}) and false negative (\emph{FN}) depending on their true location. 
+\begin{equation}
+  \small
+  \text{Precision} = \frac{TP}{TP + FP} \quad \quad \text{Recall} = \frac{TP}{TP + FN} \quad \quad \text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
+
+From the precision-recall curves (\figref{fig:pr_curves}), it is evident that Logg3dNet consistently outperforms the other models across the four different forests. Particularly, on the Evo and Stein am Rhein datasets, where a longer range with narrow field-of-view Hesai XT32 LiDAR was employed, Logg3dNet showed the best performance both in terms of precision and recall, with a more gradual fall in precision and recall.
+In contrast, ScanContext has much lower precision. This is because a limited vertical field-of-view of LiDAR sensor would produce inconsistent height values for descriptor bins depending on different viewpoints and descriptors not being translational invariant would lead to incorrect detection of the candidate. In more challenging scenarios such as Wytham Woods, handcrafted models show a notable decline in performance. Meanwhile, Logg3dNet remains robust, successfully retrieving a substantial portion of correct loop-candidates, achieving a 70\% precision at a 50\% recall rate. 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\linewidth]{pics/exp_1.1_pr_curves}
   \caption{Precision-recall curves on four different forest datasets. Evo (Finland, May), Stein am Rhein (Switzerland, Oct), Wytham woods (UK, Feb), Wild-Places \cite{knights2023icra} (Australia).
-  Evo and Stein am Rhein datasets were collected by Hesai XT32, and Wytham woods dataset was collected by Hesai QT64. Datasets were collected by backpack-LiDAR within dense forests. Only top-1 candidate within 10\,m of the ground truth position is regarded as a true positive candidate.}
+  Evo and Stein am Rhein datasets were collected by Hesai XT32, and Wytham woods dataset was collected by Hesai QT64. Datasets were collected by backpack-carried LiDAR within dense forests. Only top-1 candidate within 10\,m of the ground truth position is regarded as a true positive candidate.}
   \label{fig:pr_curves}
 \end{figure}
 % \mfallon{I get to this bit and there is just a hole in the work because nothing about Logg3dNet's algorithm is ever discussed. There is no tuning or ablation. It just presented `as is'.}
-\subsection*{Heatmaps}
-To further analyze the distinctiveness of each descriptor, we measured the descriptor distances between all query and database descriptors. This is shown in \figref{fig:heatmap_evo12} as a heatmap, which provides a visual representation of the discriminative potential of each descriptor. Consistent with the precision-recall curves, Logg3dNet descriptors exhibited higher similarity with the ground truth heatmap as observed in the highlighted areas, indicating a high true-positive rate and low false-positive rate, respectively. This implies that Logg3dNet descriptors can effectively detect corresponding loop-candidates during revisits, whereas EgoNN and ScanContext tend to be less discriminative, often returning numerous false-positive candidates. Based on this evidence, we chose Logg3dNet as main the place recognition method for the rest of the experiments.
-\begin{figure}[htbp]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.9\linewidth]{pics/exp_1.2_heatmap_evo12_plasma_edit}
-  \caption{Heatmaps depicting descriptor distances for the Evo dataset. Yellow hues denote a high descriptor similarity between scans, whereas purple indicates the low similarity. Patterns more closely resembling the ground-truth (top-left) indicate better descriptor performance. Logg3dNet descriptors shows the most similar patterns, whereas ScanContext descriptors are least discriminative among these models. We use $\tau_{s}$ that corresponds to the $F_1$-max score in evaluation.}
+  \includegraphics[width=0.85\linewidth]{pics/exp_1.2_heatmap_evo12_plasma_edit}
+  \caption{The top right image shows the ground truth distance matrix, where each element represents the Euclidean distance between two poses. Yellow hues depict poses less than \SI{10}{\meter} apart, while farther poses are shown in purple shades. The remaining similarity matrices (heatmaps) depict the cosine distances between descriptors for the Evo dataset. Yellow hues indicate a high degree of similarity between descriptors of different scans, whereas purple shades represent low similarity. Patterns that more closely resemble the ground truth distance matrix (top-left) indicate better descriptor performance. The Logg3dNet descriptors exhibit patterns most similar to the ground truth, whereas the ScanContext descriptors are the least discriminative among these models. We use the value of $\tau_{s}$ that corresponds to the maximum $F_{1}$ score in the evaluation.}
   \label{fig:heatmap_evo12}
 \end{figure}
+
+\subsection*{Similarity matrix (heatmap)}
+To further analyze the distinctiveness of each descriptor, we measured the descriptor distances between all query and database descriptors. This is shown in \figref{fig:heatmap_evo12} as a similarity matrix, which provides a visual representation of the discriminative potential of each descriptor. Consistent with the precision-recall curves, Logg3dNet descriptors exhibited higher similarity with the ground truth matrix as observed in the highlighted areas, indicating a high true-positive rate and low false-positive rate, respectively. This implies that Logg3dNet descriptors can effectively detect corresponding loop-candidates during revisits, whereas EgoNN and ScanContext tend to be less discriminative, often returning numerous false-positive candidates. Based on this evidence, we chose Logg3dNet as main the place recognition method for the rest of the experiments.
 
 
 
@@ -114,12 +98,12 @@ To further analyze the distinctiveness of each descriptor, we measured the descr
 %%% Second experiment: Online SLAM
 \section{Online Single Mission SLAM}
 \label{sec:exp_online_slam}
-In this experiment, we tested our complete pipeline (in \secref{sec:pipeline}) and investigate the online place recognition capability, wherein loop closures from the place recognition module are integrated into the SLAM system. First, illustrative results of loop closures obtained from different forest datasets will be shown and discussed. Then, we further analyze the loop closure statistics by distance and view point differences. Lastly, we compared place recognition performance with handcrafted model, \emph{ScanContext}. 
+In this experiment, we tested our complete pipeline (described in \secref{sec:pipeline}) and investigate its online place recognition capability, wherein loop closures from the place recognition module are integrated into VILNES SLAM system. First, illustrative results of loop closures obtained from different forest datasets are shown and discussed. Then, we further analyzed the loop closure statistics by distance and viewpoint differences. Lastly, we compared place recognition performance with handcrafted model, \emph{ScanContext}. 
 
-\figref{fig:exp_2_1_evo_online} presents an illustrative example of online SLAM running on the Evo dataset sequence. In this mode, we can see loop closures (red lines) inside the dense forest between previous scans and the current scan, while walking through the forest without following the same path. 
+\figref{fig:exp_2_1_evo_online} presents an illustrative example of online SLAM running on the Evo dataset sequence. In this mode, we can see loop closures (red lines) inside the dense forest between previous scans and the current scan. We can achieve these loop closures within the dense forest environment between previous scans and the current scan without having to revisit or retrace the previously traversed paths.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.9\columnwidth]{pics/exp_2_0_rviz1.pdf}
+  \includegraphics[width=0.9\columnwidth]{pics/exp_2_0_rviz2.pdf}
   \caption{Illustration of online SLAM mode running with the \emph{place recognition server} on the Evo exp16 sequence. Red lines are loop closures successfully captured by the place recognition module while mapping the forest (yellow trajectories).}
   \label{fig:exp_2_0_rviz}
 \end{figure}
@@ -127,110 +111,119 @@ In this experiment, we tested our complete pipeline (in \secref{sec:pipeline}) a
 
 
 \subsection*{Online Place Recognition Results}
-Now, we will analyze how the loop candidates obtained and verified at each stage of the pipeline. As discussed in \secref{sec:pipeline}, the pipeline consists of three stages: 1.~Initial loop candidate proposal by descriptor matching, 2.~Coarse registration with RANSAC based feature matching, 3.~ICP fine registration. Loop candidates verified at each stage are shown in blue, orange, and red lines respectively in \figref{fig:exp_2_1_evo_online} and \figref{fig:exp_2_1_wytham_online}.
+In this section we analyzed how the loop candidates are obtained and verified at each stage of the pipeline. To summarize typical performance, we analyzed each of three steps of the pipeline: candidate proposal, coarse registration, and fine registration. 
+\begin{itemize}
+  \item \textbf{Step 1: Loop candidate proposal (Blue)}\hspace{0.5em} Many loop closure candidates are initially proposed (shown with blue lines in \figref{fig:exp_2_1_evo_online} and \figref{fig:exp_2_1_wytham_online}) under a descriptor matching threshold $\tau_{s}$ of $F_{1}$-max score. Next, we simply use a fixed threshold of \SI{20}{\meter} and reject loop closures beyond this conservative estimate using the odometry information, assuming that the accumulated drift over such short traverses is relatively small compared to the \SI{20}{\meter} threshold. It is important to note that for much longer traverses where significant drift is expected, using the marginal covariance of the pose graph to reject statistically improbable loop closure candidates would be a more appropriate. Additionally, the database $D$ is incrementally built as the sensor moves through the environment, and the most recent 30 seconds of data are excluded to prevent loop closures with immediately recent measurements.
+  
+  \item \textbf{Step 2: Coarse Registration (Orange)}\hspace{0.5em} A subset of the initial loop closure candidates from Step 1 are identified using RANSAC feature matching (highlighted in orange lines in \figref{fig:exp_2_1_evo_online} and \figref{fig:exp_2_1_wytham_online}). These candidates are then verified using SGV and pairwise consistency checks. 
 
-More specifically many loop closure candidates are initially proposed (shown in blue) under a descriptor matching threshold $\tau_{s}$ of $F_1$-max score. Loop closures beyond a conservative estimate of \SI{20}{\meter} are rejected using the odometry information. After this, a subset of loop closure candidates are identified using RANSAC matching (highlighted in orange), and finally, a refined set of loop closures that pass the consistency and ICP steps are integrated into the SLAM framework. Final loop closures (shown in red) are one of ICP verified loop candidates by checking pose graph density to avoid over-constraining the pose graph. Since the database $D$, is incrementally built as the sensor moves through the environment, we exclude the most recent 30 seconds of data to prevent loop closures with immediately recent measurements.\\
-\newline
-\textbf{Evo (\textbf{\figref{fig:exp_2_1_evo_online}})}\hspace{0.5em} We tested on Evo dataset as shown \figref{fig:exp_2_1_evo_online}. Evo16 sequence is densly scanned where each zigzag turn is about 10-15m apart, whereas Evo12 is mapped sparsely with about 20-30m apart. For Evo16, we can observe frequent loop candidates upto \SI{20}{\meter} between each zigzag turn, whereas for Evo12, final loop closures are not as many as in Evo16. Initial candidates (above \SI{20}{\meter}) are strongly rejected by odometry estimate and verification layers. In summary, we observed that the system can reliably detect loop closures inside the dense forest in both cases and correct the drift. \\
+  \item \textbf{Step 3: Fine Registration (Red)}\hspace{0.5em} The loop closure candidates that pass the consistency and ICP (Iterative Closest Point) steps are integrated into the SLAM framework. The final loop closures (shown in red lines in \figref{fig:exp_2_1_evo_online} and \figref{fig:exp_2_1_wytham_online}) are the ICP verified loop candidates from Step 2. At this stage, we also reject any additional loop closures from similar positions to avoid over-constraining the pose graph (pose graph constraint density filter).
+\end{itemize}
+\textbf{Evo (\textbf{\figref{fig:exp_2_1_evo_online}})}\hspace{0.5em} We tested on Evo dataset as shown \figref{fig:exp_2_1_evo_online}. Evo16 sequence was densely scanned where each zigzag turn is about 10-15m apart, whereas Evo12 was mapped sparsely with about 20-30m apart. For Evo16, we can observe frequent loop candidates up to \SI{20}{\meter} between each zigzag turn, whereas for Evo12, fewer final loop closures were found than for Evo16. Initial candidates with an inter-pose distance above \SI{20}{\meter} are strongly rejected in the earlier stages of odometry estimate check and verification layers. In both experiments, we observe that the system can reliably detect loop closures inside the dense forest and correct the SLAM system's drift. \vspace{5pt}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.53\columnwidth]{pics/exp_2_1_evo16_online2.png}
   \includegraphics[width=0.46\columnwidth]{pics/exp_2_1_evo12_online.png}
-  \caption{Online SLAM results on Evo dataset. Evo16 (Left) and Evo12 (Right). Initial candidates (Blue) proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph.}
+  \caption{Online SLAM results on Evo dataset. Evo16 (Left) and Evo12 (Right). Initial candidates (Blue) proposed by descriptor distance and odometry check. Yellow lines are RANSAC-registered candidates which have successfully passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and pose graph constraints density filter in pose graph.}
   \label{fig:exp_2_1_evo_online}
 \end{figure}
-\newline
-\textbf{Wytham Woods (\textbf{\figref{fig:exp_2_1_wytham_online}})}\hspace{0.5em} We further tested on more challenging dataset, Wytham Woods, which is a densely wooded area with uneven terrain, including hills. In \figref{fig:exp_2_1_wytham_online}, we observed that there are still enough numbers of correct RANSAC-registered loop candidates, but ICP could not fine-register them. For example, regarding Mission D and C shown in \figref{fig:exp_2_1_wytham_online}, our system correctly detected loop candidates and RANSAC registered them (Yellow lines) at each turns. However, the ICP rejected almost all candidates due to very small number of overlapping point clouds between two scans (usually 2k-3k out of 20k points, $\sim$\SI{10}{\percent} overlaps). Unfortunately, lowering ICP thresholds to less than $\sim$ 3k points to accept these candidates introduced false positives, resulting in a failure of system. Our system suffers from high outliers rate due to occlusions and sparse point clouds at the far distance making ICP registration challenging. As a result, our system partly corrected the drifts in both sequences, failing to correct drifts at the start. 
+
+\noindent \textbf{Wytham Woods (\textbf{\figref{fig:exp_2_1_wytham_online}})}\hspace{0.5em} We further tested on a more challenging dataset taken in Wytham Woods, which is a densely wooded area with uneven terrain, including hills. In \figref{fig:exp_2_1_wytham_online}, we demonstrate that a sufficiently large numbers of correct RANSAC-registered loop candidates, but ICP could not fine-register them. For example, regarding Mission D and C shown in \figref{fig:exp_2_1_wytham_online}, our system correctly detected loop candidates and RANSAC registered them (Yellow lines) at each turn. However, the ICP rejected almost all candidates. This was due to very small number of overlapping point clouds between two scans (usually 2k-3k out of 20k points, $\sim$\SI{10}{\percent} overlaps). Unfortunately, lowering ICP thresholds to less than $\sim$ 3k points to accept these candidates introduced false positives, resulting in a failure of system. In this dataset we see that our system suffers from a high rate of outliers due to occlusions and the large pose-to-pose translation at the far distance making ICP registration challenging. In summary, our system can correct drift in both sequences but is unable to find loop closures at the start.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.49\columnwidth]{pics/exp_2_1_wytham_D.png}
   \includegraphics[width=0.49\columnwidth]{pics/exp_2_1_wytham_C.png}
-  \caption{Online SLAM results on Wytham Woods, two sequences Mission D(Left) and Mission C(Right) are shown. Blue lines are initial candidates proposed by descriptor distance and odometry check. Yellow lines are successfully RANSAC-registered candidates which passed SGV and pairwise consistency checks. Red lines are final loop closures after ICP verification and checking constraints density in pose graph. In both mission, ICP struggled to verify loop candidates from correctly RANSAC-registered due to very small overlapping point clouds.}
+  \caption{Online SLAM results from Wytham Woods, two sequences Mission D(Left) and Mission C(Right) are shown. Light blue lines are initial candidates proposed by descriptor distance and odometry check. Yellow lines are successful RANSAC-registered candidates which passed the SGV and pairwise consistency checks. Red lines are final accepted loop closures after ICP verification and checking constraints density in pose graph. In both missions, ICP struggled to verify loop candidates from correctly RANSAC-registered due to the slow degree of overlap in the point clouds.}
   \label{fig:exp_2_1_wytham_online}
 \end{figure}
 
 
 \subsection*{Loop Closure Statistics}
 % Present results in exp2_2
-Alongside visual illustrations of loop closures, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs across considerable baseline distances (\SIrange{10}{20}{\meter}). \\
-\newline
-\textbf{Baseline distance}\hspace{0.5em} We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making convergence of ICP challenging. \\
-\newline
-\textbf{Viewpoints difference}\hspace{0.5em} Similarly, in terms of viewpoint orientation difference, we observed that a large proportion of the loop candidates up to \SI{90}{\degree} difference are verified both at the RANSAC-registration and ICP-based checks. However, we observed a degradation of performance over \SI{90}{\degree}, which can be attributed to the occlusions in the scans present at large orientation differences. Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
-
-\begin{figure}[htbp]
+Alongside visual illustrations of loop closures, we conducted a comprehensive analysis of loop closure statistics based on distance and viewpoint angles, shown \figref{fig:exp_2_2_loop_closure_histograms}. Our findings show that the system can successfully identify loop closure pairs when there are considerable pose-to-pose baseline distances (\SIrange{10}{20}{\meter}). \vspace{5pt}
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.85\columnwidth]{pics/exp_2_2_loop_closure_histograms}
   \caption{Loop closures distribution by distance and angle at various stages of the pipeline on Evo dataset.
-   Initial candidates based on descriptor distance are shown in blue. Candidates beyond \SI{20}{\meter} are rejected using odometry information. Candidates within \SI{20}{\meter} undergo RANSAC pre-registration with additional verification steps of SGV\cite{vidanapathirana2023ral} and pairwise checks (Yellow). Then these candidates are refined using ICP fine-registration (Red), and final loop closures in the pose graph after checking constraints density in pose graph (red with black outlined).}
+   Initial candidates based on descriptor distance are shown in blue. Candidates beyond \SI{20}{\meter} are rejected using odometry information. Candidates within \SI{20}{\meter} undergo RANSAC pre-registration with additional verification steps of SGV\cite{vidanapathirana2023ral} and pairwise checks (Yellow). Then these candidates are refined using ICP fine-registration (Red), and final loop closures in the pose graph after checking constraints density in pose graph (red with black outlined). Both of these categories count as success.}
   \label{fig:exp_2_2_loop_closure_histograms}
 \end{figure}
+
+\noindent \textbf{Baseline distance}\hspace{0.5em} We observed that despite the large baseline, a significant portion of initial candidates can be registered using RANSAC-based matching, indicating that the correspondences are accurate. However, the proportion of candidates verified by ICP decreases as the distance between scans increases. Specifically, when scans are \SI{10}{\meter} apart, $\sim$\SI{60}{\percent} of RANSAC-registered candidates are successfully verified by ICP, and when \SI{15}{\meter} apart, only $\sim$\SI{40}{\percent} remains verified. This decrease is due to the diminishing overlap ratio between corresponding scans with increasing distance, making the accurate convergence of ICP challenging. \vspace{5pt}
+
+\noindent \textbf{Viewpoints difference}\hspace{0.5em} Similarly, regarding viewpoint orientation differences, we observed that a significant proportion of loop candidates, up to a \SI{90}{\degree} difference, were verified during the RANSAC-registration stage, constituting approximately  \SIrange{80}{50}{\percent} of the initial candidates. Subsequently, during ICP inliers checks, approximately \SIrange{80}{60}{\percent} of those RANSAC-registered candidates were finally verified. 
+
+However, we observed a degradation in proportion of candidates beyond \SI{90}{\degree} to \SI{180}{\degree} at both the RANSAC-registration and ICP checks. The proportion of RANSAC-registered candidates decreased to below $\sim$\SI{30}{\percent} of the initial candidates, likely due to the rotational invariance limitations of the Logg3dNet descriptors. The proportion of ICP-verified candidates from RANSAC-registered candidates also declined to \SIrange{40}{10}{\percent}, which we assume is due to the small number of overlapping inlier points in the occluded point clouds captured from different viewpoints and locations.
+Nonetheless, despite this degradation, the number of final loop closures integrated into the SLAM system proved to be sufficient for correcting the drift.   
+
+
 
 
 
 \subsection*{Model Comparison: ScanContext}
-So far we have shown capability of Logg3dNet reliably finding loop closures inside the forest. We now shows ScanContext implemented on our SLAM system on Evo16 dataset to compare with Logg3dNet. It was evident ScanContext shows a drop in performance in \ref{sec:exp_desc_analysis}, and now we evaluate if ScanContext can detect any loop candidates and find 6DoF transformation reliably inside the forest.  
+So far we have shown capability of Logg3dNet reliably finding loop closures inside the forest. We now show how ScanContext performs (again integrated within  our SLAM system) to provide a comparison to Logg3dNet-based system. \figref{fig:exp_2_3_loop_closure_comparison} shows ScanContext's loop closure results on the Evo dataset. The figure can be directly compared with \figref{fig:exp_2_1_evo_online} (Left image) to see the difference in loop closure performance between Logg3dNet and ScanContext.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\columnwidth]{pics/exp_2_sc_loop_closure.png}
   % \includegraphics[width=0.49\columnwidth]{pics/exp_2_logg3dnet_loop_closure.png}
-  \caption{Loop closures with ScanContext on Evo exp16 dataset. ScanContext could not detect any loop closures inside the dense forest but only in open access roads, whereas Logg3dNet successfully found loop closures inside the forest. Also ScanContext only detected loop closures within \SI{3}{\meter} (same location), whereas Logg3dNet detected loop closures upto 15m. Finally, Scancontext accumulated drift over time.}
+  \caption{Loop closures with ScanContext on Evo exp16 dataset. ScanContext could not detect any loop closures inside the dense forest but only in the open access road, whereas Logg3dNet successfully found loop closures inside the forest (as shown in previous \figref{fig:exp_2_1_evo_online}). Additionally, the ScanContext loops were only found within \SI{3}{\meter} (same location), whereas Logg3dNet detected loop closures up to \SI{15}{\meter}. Because of this the Scancontext-enabled SLAM system accumulates drift over time.}
   \label{fig:exp_2_3_loop_closure_comparison}
 \end{figure}
-
-From \figref{fig:exp_2_3_loop_closure_comparison}, we can observe that ScanContext could not detect any loop closures inside the dense forest producing very high number of false positives (shown in blue lines), and could detect only in open access roads. Among those loop closures along open access roads, ScanContext detected only within \SI{3}{\meter} (same location). Finally, Scancontext accumulated drift over time while Logg3dNet corrected drifts. This shows very limited capability of ScanContext compared to Logg3dnet, and this experiment validates the robustness of Logg3dNet compared to ScanContext (handcrafted method) in dense forest environments.
-
+From \figref{fig:exp_2_3_loop_closure_comparison}, we can observe that ScanContext could not detect any loop closures inside the dense forest producing a very high number of false positives (shown in blue lines), and could only achieve successful loop closures in the open access roads(red lines at the bottom of the plot). Among those loop closures along open access roads, ScanContext detected only within \SI{3}{\meter} (same location). Finally, ScanContext accumulated drift over time while Logg3dNet corrected this drift. This demonstrates the very limited capability of ScanContext compared to Logg3dnet, and this experiment validates the robustness of Logg3dNet compared to ScanContext (handcrafted method) in dense forest environments.
+It was evident ScanContext shows a drop in performance in \ref{sec:exp_desc_analysis}, and now we evaluate if ScanContext can detect any loop candidates and find 6DoF transformation reliably inside the forest.  
 
 
 % Third experiment: Offline Multi-Mission SLAM
 %%% 
 \section{Offline Multi-Mission SLAM} 
 \label{sec:offline_multi_mission}
-In this experiment, we showcased the ability of our approach to obtain loop closures between different mapping missions and to merge those missions into a common map. In this task, we employed tighter descriptor thresholds ($\tau_{s}$) compared to the online SLAM task, in order to reduce the number of false positive loop candidates.
-Below shows the results of merging different sequences within three different datasets: Wytham Woods, Evo, and the Forest of Dean. Each individual mission covers approximately one hectare, with merged map areas ranging from three to five hectares. \\
-\newline
-\textbf{Evo (\figref{fig:exp_multi_mission_evo})}\hspace{0.5em}  Evo forest primarily comprises tall, lofty coniferous trees. We mapped total 6 multi-missions in the main site and successfully merged them. Especially, we tested the robustness of our system by placing XT32 LiDAR at a \SI{45}{\degree} inclination aimed at capturing the forest canopy. Despite the asymmetry in point clouds introduced by this inclination change, which primarily captured points in the forward direction, our approach successfully identified loop closures and achieved multi-mission map merging.\\
+In this experiment, we showcased the ability of our approach to obtain loop closures between different mapping missions (e.g taken on different days) and to merge those missions into a common map. Below shows the results of merging different sequences within three different datasets: Wytham Woods, Evo, and the Forest of Dean. Each individual mission covers approximately one hectare, with merged map areas ranging from three to five hectares. 
+\vspace{5pt}
+
+\noindent \textbf{Evo (\figref{fig:exp_multi_mission_evo})}\hspace{0.5em}  Evo forest primarily comprises tall, mature coniferous trees. We mapped a total of 6 missions in the main site and successfully merged them. In particular, we tested the robustness of our system by placing XT32 LiDAR at a \SI{45}{\degree} inclination aimed at more densely capturing the forest canopy. Despite the asymmetry in point clouds introduced by this inclination change, which primarily captured points in the forward direction, our approach successfully identified loop closures and achieved multi-mission map merging.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{pics/exp_3_offline_evo_pcd.png}
   % \caption{Offline multi-mission SLAM point clouds output.}
   \includegraphics[width=\columnwidth]{pics/exp_3_1_multimission_slam_evo_ratio.png}
-  \caption{Offline multi-mission SLAM (Evo). Inter-mission loop closures identified when viewpoints are closely aligned due to the incline of the LiDAR setup. Merged point clouds show successful loop closures between different missions.}
+  \caption{Offline multi-mission SLAM (Evo). Merged point clouds (top) show successful loop closures between different missions. Inter-mission loop closures(bottom) identified when viewpoints are closely aligned. This is due to the \SI{45}{\degree} inclination of the LiDAR used in the main test site of Evo. }
   \label{fig:exp_multi_mission_evo}
 \end{figure}
-\newline
-\textbf{Wytham Woods (\figref{fig:exp_multi_mission_wytham})} \hspace{0.5em}  Wytham Woods were challenging due to the very high tree density, foliage, and vegetation present. Four multi-missions were captured with wide field of view Hesai QT64 LiDAR. Despite these challenges, our system successfully identified loop closures between different missions and merged them as shown in \figref{fig:exp_multi_mission_wytham}. During individual mission processing, slight drifts were noted at the beginning and end of each mission. However, through the multi-mission map merging process, the system successfully corrected these drifts occurring in overlapping areas. \\
+\vspace{5pt}
+
+\noindent \textbf{Wytham Woods (\figref{fig:exp_multi_mission_wytham})} \hspace{0.5em}  Wytham Woods are the most challenging due to having the highest tree density, as well as the foliage, and vegetation present. Four multi-missions were captured with wide field-of-view Hesai QT64 LiDAR. Despite the challenges of the test site, our system successfully identified loop closures between different missions and merged them as shown in \figref{fig:exp_multi_mission_wytham}. During individual mission processing, slight odometry drift was noted in the SLAM system both at the beginning and end of each mission. However, during the multi-mission map merging process, the system successfully corrected this drift occurring in overlapping areas. 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\columnwidth]{pics/exp_3_offline_wytham_pcd.png}
   % \caption{Wytam Woods: Offline multi-mission SLAM pointclouds}
   \includegraphics[width=0.9\columnwidth]{pics/exp_3_1_multimission_slam_wytham_ratio.png}
-  \caption{Offline multi-mission SLAM (Wytham Woods). Merged point clouds map shows successful loop closures between different missions in a densely wooded area with high tree density.}
+  \caption{Offline multi-mission SLAM (Wytham Woods). Merged point clouds map(top) shows successful loop closures (bottom) between the different missions in a densely wooded area with high tree density.}
   \label{fig:exp_multi_mission_wytham}
 \end{figure}
-\newline
-\textbf{Forest of Dean (\figref{fig:exp_multi_mission_dean})}\hspace{0.5em} Forest of Dean is less dense forest and 3 missions were merged easily. We observed that there were more frequent \emph{intermission} loop closures in the Forest of Dean compared to Wytham in overlapping areas. \\
+\vspace{5pt}
+
+\noindent \textbf{Forest of Dean (\figref{fig:exp_multi_mission_dean})}\hspace{0.5em} Forest of Dean is the least dense forest and a total of 3 missions collected there were merged easily. We observed that there were more frequent \emph{intermission} loop closures in the Forest of Dean compared to Wytham in overlapping areas. This is because more widely spread tree locations and minimal foliage produced much fewer occlusions and cleaner point clouds with higher number of overlapping points between two intermission scans. This favorable environment of Forest of Dean makes multi-mission map merging process easier when registering point clouds during the RANSAC-registration and ICP steps of loop candidates.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{pics/exp_3_offline_Dean_pcd3.png}
   % \caption{Forest of Dean: Offline multi-mission SLAM pointclouds}
   \includegraphics[width=\columnwidth]{pics/exp_3_1_multimission_slam_dean_ratio.png}
-  \caption{Offline multi-mission SLAM(Forest of Dean). The merged map shows successful loop closures between different missions with much sparser trees and plantations.}
+  \caption{Offline multi-mission SLAM(Forest of Dean). The merged map (top) shows successful loop closures (bottom) between the different missions. This plantation is much sparser than the others.}
   \label{fig:exp_multi_mission_dean}
 \end{figure}
-\newline
-\textbf{Merged map quality (\figref{fig:truk_of_trees})}\hspace{0.5em} Merged map's quality is examined by checking point clouds of trees. We observed distinct tree trunks with no apparent signs of drifts. Circular shapes for tree trunks were clearly seen in the point clouds, indicating that the map scanned in different positions were registered correctly. 
+\vspace{5pt}
+
+\noindent\textbf{Merged map quality (\figref{fig:truk_of_trees})}\hspace{0.5em} The quality of the merged maps were examined by checking point clouds of trees. We observed distinct tree trunks has no apparent signs of drift. The circular shapes of tree trunks were clearly seen in the point clouds, indicating that the map scanned in different positions were registered correctly. 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.49\columnwidth]{pics/exp_3_offline_pointclouds_trunk.png}
   % \caption{A region of Evo merged forest map point clouds coloured by height. I cropped canopies to check trunks of trees. Trunks are very distinct showing no evidence of drift occured.}
   \includegraphics[width=0.49\columnwidth]{pics/exp_3_offline_pointclouds_trunk_BV3.png}
-  \caption{Merged map quality. Trunks of trees from Bird's eye view(right image). We observed circular shapes for tree trunks clearly seen in the point clouds, indicating the map scanned in different viewpoints were registered correctly.}
+  \caption{Merged map quality. Trunks of trees from a bird's-eye view (right image). We observed the circular shapes of tree trunks clearly seen in the point clouds, indicating the map scanned in different viewpoints were registered correctly.}
   \label{fig:truk_of_trees}
 \end{figure}
 
-Overall, our experiments showed potential for efficient large-scale mapping, as we did not require to start at the open access roads nor following exactly the same paths to achieve loop closures between inter-missions. We also built the map incrementally, one section at a time, hence overlapping areas could only be guaranteed for subsequent missions.
-
+Overall, our experiments showed a potential capability for efficient large-scale mapping without any specific condition as to the route take. In particular, we did not need to start at the open access roads nor follow exactly the same paths to achieve loop closures between inter-missions. 
 
 
 % \tabref{tab:exp_offline_distance_table} provides summary statistics of the distribution of loop closures at different distance ranges. Our multi-stage verification pipeline effectively filters out unreliable loop candidates, with approximately 90\% of successful candidates found within 10\,m of each other. Notably, experiments conducted in Wytham Woods and the Forest of Dean highlight that our system can identify loop closures within the forests, eliminating the need to precisely retrace previously mapped areas to achieve loop closures. This underscores the versatility and robustness of our approach in real-world forest mapping scenarios.
@@ -275,32 +268,31 @@ Overall, our experiments showed potential for efficient large-scale mapping, as 
 \section{Relocalization} 
 \label{sec:exp_relocalization}
 % What is this experiment about?
-This experiment showcases a relocalization demonstration in a dense forest using our approach. In this scenario, our system demonstrates the ability to continuously track the position within a prior SLAM map once an initial loop closure is established. Unlike multi-mission, since prior map poses are fixed as ground truth,  we no longer jointly optimize poses.
-Instead, we try to relocalize the robot into the prior map using the current LiDAR scan and the prior map of individual scans. We set the pairwise consistency threshold at few centimeter level to enable consistent relocalization only within centimeter level of error. 
+This experiment showcases a demonstration of relocalization in a prior map. In this scenario, our system demonstrates the ability to continuously track the position of the mapping device within a prior SLAM map once an initial loop closure is established. Unlike the multi-mission SLAM use case, the prior map is now fixed as ground truth. To reiterate - the prior map (in green tree point clouds in \figref{fig:relocalization_demo}) is made up of individual scans with a descriptor rather than a single giant point cloud. We set the pairwise consistency threshold to $\sim$\SI{10}\,cm to enable consistent relocalization only within centimeter level of error. \vspace{5pt}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.80\linewidth]{pics/exp_4_relocalization_demo.png}
-  \caption{Demonstration of relocalization capability. LiDAR (illustrated by large marker) is relocalized in a prior map (dark brown). We render a virtual view of the forest digital map synchronized with images from our camera (right). Red arrow shows a successful localization at that pose.}
+  \includegraphics[width=0.65\linewidth]{pics/exp_4_relocalization_demo.png}
+  \caption{Demonstration of relocalization capability. The LiDAR sensor (illustrated by large marker) is relocalized in a prior map (dark brown). We render a virtual view of the forest digital map synchronized with images from our camera (up right image). The virtual tree models were generated by fitting cylindrical shapes to individual trees in the point cloud data, as described in \cite{freißmuth2024arxiv}. Red arrow shows a successful localization at that pose.}
   \label{fig:relocalization_demo}
 \end{figure}
 
-\subsection*{Forest Surveying Demonstration}
-\figref{fig:relocalization_demo} and \figref{fig:relocalization_before_after} present illustrative examples of this demonstration, where the quadruped robot shown in \figref{fig:relocalization_before_after} is localized with respect to a prior SLAM map generated using a backpack LiDAR system. Drifts accumulated in the robot are corrected by finding loop candidates in the prior map of individual scans. For example,  \figref{fig:relocalization_before_after} shows demonstration of before and after relocalization. The left image shows the incorrect position of virtual tree model due to drifts accumulated in odometry. After relocalization, the virtual tree model is rendered at the correct current position. 
+\noindent\textbf{Forest Surveying Demonstration}\hspace{0.5em}
+\figref{fig:relocalization_before_after} present illustrative examples of this demonstration, where the quadruped robot is localized with respect to a prior SLAM map generated using a backpack LiDAR system. Drift accumulated by the robot was corrected by finding loop candidates in the prior map of individual scans as shown in \figref{fig:relocalization_before_after}. The left image shows the incorrect position of virtual tree model due to incorrect state estimate in odometry system. After relocalization, the virtual tree model is rendered again at the correct relocalized position. 
 
-This capability enables the real-time rendering of a virtual forest map overlaid with associated data, such as Diameter at Breast Height (DBH) and species information, onto the camera images. Such feedback is highly beneficial for tasks such as taking forest inventories by foresters or enabling autonomous harvesting.
+Overall, this capability enables the real-time rendering of a virtual forest map overlaid with associated data, such as Diameter at Breast Height (DBH) and species information, onto the camera images. Such feedback is highly beneficial for tasks such as taking forest inventories by foresters or enabling autonomous harvesting. \vspace{1pt}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.99\linewidth]{pics/exp_4_relocalization_before_after2.pdf}
-  \caption{Demonstration of relocalization of a quadruped robot before and after. Left image shows incorrect position of virtual tree model due to drifts accumulated in odometry. Right image shows correct position of virtual tree model after relocalization.}
+  \includegraphics[width=0.9\linewidth]{pics/exp_4_relocalization_before_after3.pdf}
+  \caption{Demonstration of relocalization of a quadruped robot before and after. Left image shows incorrect position of virtual tree model due to drift accumulated in odometry. Right image shows correct position of virtual tree model after relocalization.}
   \label{fig:relocalization_before_after}
 \end{figure}
 
-\subsection*{Relocalization Failure}
-In the relocalization scenario, relocalizing to incorrect candidate leads to a sudden jump in current base sensor position (shown in left image in \figref{fig:relocalization_pairwise_cycle_consistency}). This is easily detected by checking pairwise cycle consistency between map-base $\Delta\mathbf{T}_{\M\B}$ and odometry-base frame $\Delta\mathbf{T}_{\Odo\B}$, and effectively prevent the relocalization failure. \figref{fig:relocalization_pairwise_cycle_consistency} shows an example of relocalization failure due to incorrect loop candidate (Left). Right image shows pairwise cycle consistency verification filtering out incorrect loop candidate.
+\noindent\textbf{Relocalization Failure}\hspace{0.5em}
+In the relocalization scenario, relocalizing into an incorrect candidate leads to a sudden jump in current position (shown in left image in \figref{fig:relocalization_pairwise_cycle_consistency}). This is easily detected by checking pairwise cycle consistency between map-base $\Delta\mathbf{T}_{\M\B}$ and odometry-base frame $\Delta\mathbf{T}_{\Odo\B}$, and effectively prevent the relocalization failure by \SI{50}{\percent}. \figref{fig:relocalization_pairwise_cycle_consistency} shows an example of incorrect localization with an incorrect loop candidate (Left). Right image shows pairwise cycle consistency verification filtering out incorrect loop candidate.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{pics/exp_4_relocalization_pairwise_before_after3.pdf}
-  \caption{Left: failure of relocalization due to incorrect loop candidate. Right: correct relocalization after filtering out incorrect loop candidate by pairwise cycle consistency checking.}
+  \includegraphics[width=0.9\linewidth]{pics/exp_4_relocalization_pairwise_before_after4.pdf}
+  \caption{Left: relocalization failed due to incorrect loop candidate. Right: after filtering out incorrect loop candidate by pairwise cycle consistency checking.}
   \label{fig:relocalization_pairwise_cycle_consistency}
 \end{figure}
 
@@ -309,35 +301,37 @@ In the relocalization scenario, relocalizing to incorrect candidate leads to a s
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Parameter analysis \& Computational Analysis}
-In this section, we will discuss our final verification step of ICP inlier-based check in more detail. How ICP inliers affect the robustness of loop closures. We will also provide a brief computational analysis of the system, including runtime and memory consumption.\\
-\newline
-\textbf{Study of ICP inlier-based check}\hspace{0.5em} Our final experiment investigates the ICP inlier-based check on loop closure integration within the final pose graph optimization process. This analysis is crucial for ensuring that incorrect loop closures are not introduced into the optimized pose graph.
-\figref{fig:icp_inliers} illustrates the corrections (on top of the initial transformation prior) as estimated by the ICP registration at various distances. Additionally, the figure color-codes the points based on the number of inlier points obtained during the registration process, with blue indicating a large number of inliers and red indicating a smaller number.
-Our observation suggests that loop closures occurring beyond 10\,m, which propose a substantial transformation correction often have fewer inlier ICP points and are thus less reliable.
-Based on this analysis, we establish an inlier threshold to ensure that corrections are limited to ICP corrections of less than 1 meter (shown in dotted red line). This threshold further reduces the number of incorrect loop closures from being integrated into the pose graph.\\
-\begin{figure}[t]
+In this section, we will discuss our final verification step of the ICP inlier-based check in more detail. We will also provide a brief computational analysis of the system, including runtime and memory consumption. \vspace{5pt}
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.99\linewidth]{pics/exp_4_ablation_icp_inliers_4cm}
+  \includegraphics[width=0.8\linewidth]{pics/exp_4_ablation_icp_inliers_4cm}
   \caption{Analysis of final ICP registration check. X-axis shows the distribution of loop-candidates by distance after ICP.
   Y-axis shows ICP correction error w.r.t. the coarse-registration from RANSAC. Color indicates the number of ICP inliers,  30 iterations and RMSE= 0.01m, where clouds are cropped 50 by 50m, then downsampled to 20k points.}
   \label{fig:icp_inliers}
 \end{figure}
-\newline
-\textbf{Setting ICP inlier thresholds} \hspace{0.5em} The ICP inliers threshold is the least number of points required to fine registered loop candidates. Only if ICP inliers turned out to be higher than ICP inliers threshold we accept the loop closure candidate. 
-The ICP threshold should be fine-tuned to $\sim$ 3k-5k points depending on the LiDAR setup and forest environments. There is trade-off between the baseline distance and the robustness of the loop-closure as shown in \figref{fig:icp_inliers_num}. For an example, in the Evo dataset, we set the threshold to 3k points, whereas in the Wytham Woods, we set the higher threshold to 4k-5k points. \\
- \begin{figure}[t]
+
+\noindent \textbf{Study of ICP inlier-based check}\hspace{0.5em} Our final experiment investigates the effect of the ICP inlier-based check on loop closure integration within the final pose graph optimization. Any incorrect loop closures should never be introduced into the optimized pose graph. We will consider this in the context of the online SLAM scenario. 
+
+\figref{fig:icp_inliers} illustrates the corrections (on top of the initial transformation prior) as estimated by the ICP registration at various distances. Additionally, the figure color-codes the points based on the number of inlier points obtained during the registration process, with blue indicating a large number of inliers and red indicating a smaller number.
+Our observation suggests that loop closures occurring more than 10\,m apart, which also propose a substantial transformation correction often have fewer inlier ICP points and are thus less reliable.
+Based on this analysis, we need to establish an inlier threshold to ensure that corrections are limited to ICP corrections of less than 1 meter (shown in dotted red line). We will further discuss how to set this threshold in the following section.
+\vspace{7pt}
+
+\noindent\textbf{Setting ICP inlier thresholds} \hspace{0.5em} The ICP inlier threshold is the minimum number of points required for fine registration loop candidates. Only if the number of inliers turned out to be higher than a threshold will we accept the loop closure candidate. 
+The ICP threshold should be fine-tuned to $\sim$ 3k-5k points depending on the LiDAR setup and forest environments. There is trade-off between the maximum baseline distance and the robustness of the loop-closure as shown in \figref{fig:icp_inliers_num}. For an example, in the Evo dataset, we set the threshold to 3k points, whereas in the Wytham Woods, we set the higher threshold to 4k-5k points. \vspace{7pt}
+ \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.99\linewidth]{pics/exp_4_icp_inliers_num4.pdf}
-  \caption{Loop closure distribution by distance at various ICP inlier thresholds. Blue lines are accepted loop candidates and Red lines are rejected candidates. Stricter (higher) ICP inlier threshold will provide more robust loop-closures but baseline distance range will be shorter, whereas lower ICP inliers will allow far baseline distance loop-closures but there is a chance of getting false positive loop candidates.}
+  \caption{Loop closure distribution by distance at various ICP inlier thresholds. Blue lines are accepted loop candidates, and red lines are rejected candidates. A stricter (higher) ICP inlier threshold will provide more robust loop closures, but the baseline distance range will be shorter, whereas lower ICP inliers will allow loop closures with a larger baseline distance, but there is an increased chance of getting false positive loop candidates.}
   \label{fig:icp_inliers_num}
 \end{figure}
 % What is the interpretation of the figure?
 % Alongside \figref{fig:exp_2_2_loop_closure_histograms}, further analysis has been done how robust the loop-candidates are. 
 % \figref{fig:ablation_icp_inliers} shows that under 10m distance, ICP inliers are high as over 4k points, and correction error is below 1m. However, the distribution of loop-candidates start to diverge significantly after 10m: correction error no longer bounds to 1m and the number of inliers are much less than 4k points. 
 % Setting a low ICP inlier threshold will provide far distance loop-closures, but there is a chance of getting False Positives.
-\newline
-{\textbf{Runtime Analysis}}\hspace{0.5em} Currently the system requires a GPU for descriptor extraction. The system runs at 0.73 Hz on a laptop with an Intel i7-10750H CPU and an NVIDIA RTX A3000 GPU. The processing time for the top-1 loop closure candidate detection is shown in \tabref{tab:my-table}. The descriptor extraction and RANSAC featuring matching are the most time-consuming process, thus running below 1Hz. It is not yet ideal for real-time applications, but it is sufficient for using in reprocessing. \\
-\begin{table}[h]
+
+\noindent{\textbf{Runtime Analysis}}\hspace{0.5em} Currently the system requires a GPU for descriptor extraction. The system runs at 0.73 Hz on a laptop with an Intel i7-10750H CPU and an NVIDIA RTX A3000 GPU. The processing time for the top-1 loop closure candidate detection is shown in \tabref{tab:my-table}. The descriptor extraction and RANSAC featuring matching are the most time-consuming process. While these results are specific to the laptop configuration, a rate close to 1 Hz is sufficient for real-time applications. \vspace{1pt}
+\begin{table}[htbp]
   \centering
   \small
   \begin{tabular}{@{}llllll@{}}
@@ -349,13 +343,15 @@ The ICP threshold should be fine-tuned to $\sim$ 3k-5k points depending on the L
   \caption{Avg. processing times for various tasks. The most time-consuming process is RANSAC-based feature matching. The system runs at 0.73 Hz.}
   \label{tab:my-table}
 \end{table}
-\newline
-\textbf{Memory Consumption}\hspace{0.5em} Dimension of global and local descriptor is 1028 and (N, 256) respectively (N is the number of keypoints). This means one global descriptor requires only 8 bytes of memory, and one local descriptor requires $\sim$2KB of memory. The memory consumption of the system is mainly dominated by the local descriptors, which are stored in the GPU memory. One sequence of run ($\sim$1000 scans) requires $\sim$2GB of GPU memory.\\
-\newline
-\textbf{Voxel Size}\hspace{0.5em} During preprocessing step it is necessary to voxelize input point clouds for discritize representation using \emph{MinkowskiEngine~\cite{choy20194cvpr}, SparseTorch~\cite{tang2023MICRO} with CUDA}. This voxel size is known to be critical for the performance of the model descriptors. Since both Logg3dNet and EgoNN are trained on Wild-Place dataset, which is different from our dataset in terms of density and range of LiDAR point clouds, We empirically determined the optimal voxel size between \SIrange{0.1}{1.0}{\meter} through direct experimentation on our dataset. Tab.~\ref{tab:voxel_size} shows that optimal voxel sizes are \SI{0.1}{\meter} and \SI{0.6}{\meter} for Logg3dNet on Evo dataset. Since the difference is not significant, we decided to use voxel size of \SI{0.6}{\meter} considering computational efficiency.\\
+
+\noindent \textbf{Memory Consumption}\hspace{0.5em} The global descriptor has a dimensionality of (1,1028), requiring 8 bytes of memory, while the local descriptor, with dimensions (N, 256) (where N is the number of keypoints), consumes approximately 2KB of memory each. GPU memory usage, primarily dominated by local descriptors, totals around 2GB for mapping a typical single mission comprising about 1000 scans.
+\vspace{7pt}
+
+\noindent \textbf{Voxel Size}\hspace{0.5em} During preprocessing, voxelizing input point clouds is essential for utilizing \emph{MinkowskiEngine~\cite{choy20194cvpr}, SparseTorch~\cite{tang2023MICRO} with CUDA}. The voxel size significantly impacts model performance. Since both Logg3dNet and EgoNN are trained on Wild-Place dataset, which is different from our dataset in terms of density and range of LiDAR point clouds, we empirically identified the optimal voxel size between \SIrange{0.1}{1.0}{\meter} through direct experimentation on our dataset. Tab.~\ref{tab:voxel_size} shows that optimal voxel sizes are \SI{0.1}{\meter} and \SI{0.6}{\meter} for Logg3dNet on Evo dataset. Since the difference is not significant, after considering we decided to use voxel size of \SI{0.6}{\meter} considering computational efficiency.\\
 
 \begin{table}[htbp]
   \centering
+  \small
   \begin{tabular}{p{2cm} *{6}{c}}
       \toprule
       \multicolumn{1}{l}{Testing} & \multicolumn{6}{c}{Voxel size (cm)} \\
@@ -370,7 +366,7 @@ The ICP threshold should be fine-tuned to $\sim$ 3k-5k points depending on the L
       \bottomrule
   \end{tabular}
 
-  \caption{$F{1}_{max}$ score of Logg3dNet with different voxel sizes on Evo dataset. Bold numbers indicate the best and second best $F{1}_{max}$ score.}
+  \caption{$F{1}_{max}$ score of Logg3dNet with different voxel sizes on Evo dataset. }
   \label{tab:voxel_size}
 \end{table}
 
